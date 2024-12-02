@@ -32,18 +32,36 @@ class _MainPageState extends State<MainPage> {
               width: 10,
             ),
             Expanded(
-              child: Container(
-                height: 800,
-                width: MediaQuery.sizeOf(context).width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(
-                    8,
+              child: Column(
+                children: [
+                  Container(
+                    height: 120,
+                    width: MediaQuery.sizeOf(context).width,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                            "images/logo.jpg",
+                          ),
+                          fit: BoxFit.contain),
+                    ),
                   ),
-                  border: Border.all(
-                    color: Colors.amber,
+                  const SizedBox(
+                    height: 16,
                   ),
-                ),
+                  Container(
+                    height: 500,
+                    width: MediaQuery.sizeOf(context).width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        8,
+                      ),
+                      border: Border.all(
+                        color: Colors.amber,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
