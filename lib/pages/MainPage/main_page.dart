@@ -15,16 +15,19 @@ class _MainPageState extends State<MainPage> {
         padding: const EdgeInsets.all(20),
         child: Row(
           children: [
-            Container(
-              height: 800,
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(
-                  8,
-                ),
-                border: Border.all(
-                  color: Colors.amber,
+            Card(
+              child: Container(
+                height: MediaQuery.sizeOf(context).height,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade700.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(
+                    8,
+                  ),
+                  border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignCenter),
                 ),
               ),
             ),
@@ -34,30 +37,35 @@ class _MainPageState extends State<MainPage> {
             Expanded(
               child: Column(
                 children: [
-                  Container(
-                    height: 120,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(
-                            "images/logo.jpg",
-                          ),
-                          fit: BoxFit.contain),
+                  Card(
+                    child: Container(
+                      height: 120,
+                      width: MediaQuery.sizeOf(context).width,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(
+                              "images/logo.jpg",
+                            ),
+                            fit: BoxFit.contain),
+                      ),
                     ),
                   ),
                   const SizedBox(
                     height: 16,
                   ),
-                  Container(
-                    height: 500,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                        8,
-                      ),
-                      border: Border.all(
-                        color: Colors.amber,
+                  Card(
+                    child: Container(
+                      height: MediaQuery.sizeOf(context).height * 0.75,
+                      width: MediaQuery.sizeOf(context).width,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade700.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                        border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                            strokeAlign: BorderSide.strokeAlignCenter),
                       ),
                     ),
                   ),
@@ -67,16 +75,19 @@ class _MainPageState extends State<MainPage> {
             const SizedBox(
               width: 10,
             ),
-            Container(
-              height: 800,
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(
-                  8,
-                ),
-                border: Border.all(
-                  color: Colors.amber,
+            Card(
+              child: Container(
+                height: MediaQuery.sizeOf(context).height,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade700.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(
+                    8,
+                  ),
+                  border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                      strokeAlign: BorderSide.strokeAlignCenter),
                 ),
               ),
             )
