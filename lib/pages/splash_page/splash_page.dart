@@ -10,7 +10,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
-        onTap: () => Get.offAll(
+        onTap: () => Get.to(
           () => const MainPage(), // Replace with the desired screen widget
         ),
         child: Container(
