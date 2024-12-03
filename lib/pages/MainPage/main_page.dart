@@ -155,8 +155,8 @@ class _MainPageState extends State<MainPage> {
     {
       "image": "images/Rose Carriage - 25,000.png",
       "priceId": "24",
-      "priceValue": "25000",
-      "priceName": "Rose Carriage",
+      "priceValue": "25999",
+      "priceName": "Adams Dream",
     },
     {
       "image": "images/Lion - 29,999.png",
@@ -233,19 +233,22 @@ class _MainPageState extends State<MainPage> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 elevation: 4,
-                child: Container(
-                  width: 90,
-                  height: 90,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                      strokeAlign: BorderSide.strokeAlignCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: AssetImage(image),
-                      fit: BoxFit.contain,
+                child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                    width: 90,
+                    height: 90,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: AssetImage(image),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
