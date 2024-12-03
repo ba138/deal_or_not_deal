@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'DEAL OR NOT DEAL',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark, // Set the overall theme to dark
         scaffoldBackgroundColor:
