@@ -158,3 +158,33 @@ List<Map<String, dynamic>> priceListTwo = [
     "priceName": "TikTok Universe",
   },
 ];
+List<String> cases =
+    List.generate(26, (index) => "images/Case ${index + 1}.png");
+List<String> priceImages = [
+  "images/Rose - 1.png",
+  "images/Finger Heart - 5.png",
+  "images/Tiny Diny - 10.png",
+  "images/Doughnut - 30.png",
+  "images/Hand Heart - 100.png",
+  "images/Sunglasses - 199.png",
+  "images/Corgi - 299.png",
+  "images/Money Gun - 500.png",
+  "images/Swan - 699.png",
+  "images/Galaxy - 1,000.png",
+  "images/Chasing The Dream - 1,500.png",
+  "images/Whale Diving - 2,150.png",
+  "images/Motorcycle - 2,988.png",
+  "images/Golden Party - 3,000.png",
+  "images/Flower Overflow - 4,000.png",
+  "images/Leon The Kitten - 4,888.png",
+  "images/Flying Jets - 5,000.png",
+  "images/Wolf - 5,500.png",
+  "images/Lili The Leopard - 6,599.png",
+  "images/Sports Car - 7,000.png",
+  "images/Interstellar - 10,000.png",
+  "images/Rosa Nebula - 15,000.png",
+  "images/TikTok Shuttle - 20,000.png",
+  "images/Rose Carriage - 25,000.png",
+  "images/Lion - 29,999.png",
+  "images/TikTok Universe - 44,999.png"
+];
