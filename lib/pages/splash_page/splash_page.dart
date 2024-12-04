@@ -10,9 +10,12 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
-        onTap: () => Get.to(
-          () => const MainPage(), // Replace with the desired screen widget
-        ),
+        onTap: () {
+          Get.offAll(() {
+            // Reset Game State
+            return const MainPage();
+          });
+        },
         child: Container(
           height: 56,
           width: 120,
