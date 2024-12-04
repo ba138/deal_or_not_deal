@@ -258,7 +258,15 @@ class _MainPageState extends State<MainPage> {
                           children: [
                             Expanded(
                                 child: buildGridView(cases, priceController)),
-                            Image.asset("images/6 Cases To Open.png")
+                            Image.asset(
+                              "images/6 Cases To Open.png",
+                              height: 70,
+                              width: MediaQuery.sizeOf(context).width,
+                              fit: BoxFit.contain,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            )
                           ],
                         ),
                       ),
