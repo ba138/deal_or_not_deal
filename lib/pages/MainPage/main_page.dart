@@ -28,7 +28,77 @@ class MainPage extends StatelessWidget {
                     ),
                   ),
                   child: Obx(() {
-                    return buildPriceList(priceController.priceListOneDynamic);
+                    return ListView.builder(
+                      itemCount: priceController.priceListOneDynamic.length,
+                      itemBuilder: (context, index) {
+                        final item = priceController.priceListOneDynamic[index];
+                        return item['image'] == ""
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 7.0,
+                                    horizontal: 8), // Add spacing here
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // Image.asset(
+                                      //   item['image'],
+                                      //   width: 30,
+                                      //   height: 30,
+                                      //   fit: BoxFit.cover,
+                                      // ),
+                                      Text(
+                                        "${item['priceValue']}",
+                                        style: const TextStyle(
+                                          color: Colors.transparent,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 7.0,
+                                    horizontal: 8), // Add spacing here
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 8),
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: Colors.amber.shade300,
+                                      borderRadius: BorderRadius.circular(4)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.asset(
+                                        item['image'],
+                                        width: 30,
+                                        height: 30,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Text(
+                                        "${item['priceValue']}",
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                      },
+                    );
                   })),
             ),
             const SizedBox(width: 10),
@@ -78,6 +148,8 @@ class MainPage extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     String caseImage =
                                         priceController.caseDynamic[index];
+                                    bool isTapped =
+                                        priceController.tappedCases[index];
 
                                     return GestureDetector(
                                       onTap: () =>
@@ -91,7 +163,10 @@ class MainPage extends StatelessWidget {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                                color: Colors.white, width: 2),
+                                              color: Colors
+                                                  .white, // Highlight tapped case
+                                              width: 2,
+                                            ),
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
@@ -140,11 +215,79 @@ class MainPage extends StatelessWidget {
                     strokeAlign: BorderSide.strokeAlignCenter,
                   ),
                 ),
-                child: Obx(
-                  () {
-                    return buildPriceList(priceController.priceListTwoDynamic);
-                  },
-                ),
+                child: Obx(() {
+                  return ListView.builder(
+                    itemCount: priceController.priceListTwoDynamic.length,
+                    itemBuilder: (context, index) {
+                      final item = priceController.priceListTwoDynamic[index];
+                      return item['image'] == ""
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 7.0,
+                                  horizontal: 8), // Add spacing here
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    // Image.asset(
+                                    //   item['image'],
+                                    //   width: 30,
+                                    //   height: 30,
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    Text(
+                                      "${item['priceValue']}",
+                                      style: const TextStyle(
+                                        color: Colors.transparent,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 7.0,
+                                  horizontal: 8), // Add spacing here
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 8, right: 8),
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.amber.shade300,
+                                    borderRadius: BorderRadius.circular(4)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      item['image'],
+                                      width: 30,
+                                      height: 30,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Text(
+                                      "${item['priceValue']}",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ));
+                    },
+                  );
+                }),
               ),
             ),
           ],
