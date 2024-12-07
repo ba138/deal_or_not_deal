@@ -105,8 +105,8 @@ class _SelectUserState extends State<SelectUser> {
                                           assignedUsers['userName'],
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 24,
-                                            color: Colors.white,
+                                            fontSize: 34,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
