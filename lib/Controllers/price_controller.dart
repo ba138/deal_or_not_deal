@@ -11,12 +11,13 @@ class PriceController extends GetxController {
   final AudioPlayer audioPlayer = AudioPlayer();
   late AudioPlayer clappingPlayer; // Separate player for clapping sound
   late AudioPlayer ringPlayer; // Separate player for ringing sound
+  late AudioPlayer dumroll;
 
   // Reactive lists to manage the case and price images
   var caseDynamic = <String>[].obs;
   var priceImagesDynamic = <String>[].obs;
-  var priceListOneDynamic = <Map<String, dynamic>>[].obs;
-  var priceListTwoDynamic = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> priceListOneDynamic = RxList([]);
+  RxList<Map<String, dynamic>> priceListTwoDynamic = RxList([]);
 
   var tappedCases = List.generate(26, (index) => false).obs;
   var round = 1.obs;
@@ -39,8 +40,19 @@ class PriceController extends GetxController {
     await clappingPlayer.play(DeviceFileSource("audio/claping.mp3"));
 
     // Stop the sound after 3 seconds
-    Future.delayed(const Duration(seconds: 5), () async {
+    Future.delayed(const Duration(seconds: 4), () async {
       await clappingPlayer.stop();
+    });
+  }
+
+  Future<void> drumRollSound() async {
+    dumroll = AudioPlayer();
+    await dumroll.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    await dumroll.play(DeviceFileSource("audio/drum_roll.mp3"));
+
+    // Stop the sound after 3 seconds
+    Future.delayed(const Duration(seconds: 3), () async {
+      await dumroll.stop();
     });
   }
 
@@ -67,6 +79,12 @@ class PriceController extends GetxController {
     await ringPlayer.stop();
   }
 
+  Future<void> stopAllSounds() async {
+    await clappingPlayer.stop();
+
+    await ringPlayer.stop();
+  }
+
   Future<void> onCaseTapped(int index) async {
     if (!tappedCases[index] && selectedCases.length < maxCasesPerRound.value) {
       tappedCases[index] = true;
@@ -74,9 +92,46 @@ class PriceController extends GetxController {
 
       // Reveal the case and price image
       revealedCases.add(index);
-      await playClappingSound();
 
       String revealedImage = priceImagesDynamic[index];
+
+      // Initialize matchedItem to null
+      Map<String, dynamic>? matchedItem;
+
+// First, check in priceListOne
+      matchedItem = priceListOne.firstWhere(
+        (item) => item['image'] == revealedImage,
+        orElse: () =>
+            <String, dynamic>{}, // Return an empty map instead of null
+      );
+
+// If no match is found in priceListOne, check in priceListTwo
+      if (matchedItem.isEmpty) {
+        matchedItem = priceListTwo.firstWhere(
+          (item) => item['image'] == revealedImage,
+          orElse: () =>
+              <String, dynamic>{}, // Return an empty map instead of null
+        );
+      }
+
+// Ensure a match is found in one of the lists
+      if (matchedItem.isNotEmpty) {
+        // Parse the priceValue and remove any commas
+        int priceValue =
+            int.parse(matchedItem['priceValue'].replaceAll(",", ""));
+
+        // Compare the value and play the appropriate sound
+        if (priceValue > 2988) {
+          await playClappingSound(); // Play clapping sound for higher values
+        } else {
+          // await playDifferentSound(); // Play a different sound for lower values
+          drumRollSound();
+        }
+      } else {
+        // Handle the case where no match is found in both lists
+        debugPrint('No matching item found for image: $revealedImage');
+      }
+
       Completer<void> completer = Completer<void>();
 
       Get.dialog(
@@ -86,8 +141,8 @@ class PriceController extends GetxController {
             height: 500,
             width: 500,
             decoration: const BoxDecoration(
-                image:
-                    DecorationImage(image: AssetImage("images/caseopen.png"))),
+              image: DecorationImage(image: AssetImage("images/caseopen.png")),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -97,19 +152,17 @@ class PriceController extends GetxController {
                   height: 400,
                   width: 400,
                 ),
-                TextButton(
-                  onPressed: () {
-                    completer.complete();
-                    Get.back();
-                  },
-                  child: const Text("OK"),
-                ),
               ],
             ),
           ),
         ),
         barrierDismissible: false,
       );
+
+      Future.delayed(const Duration(seconds: 3), () {
+        completer.complete();
+        Get.back();
+      });
 
       // Wait for user confirmation
       await completer.future;
@@ -137,8 +190,18 @@ class PriceController extends GetxController {
 
       // Check if the maximum number of cases have been selected
       if (selectedCases.length == maxCasesPerRound.value) {
-        await playRingSound();
-        Future.delayed(const Duration(seconds: 5), _showBankerOffer);
+        // Check if it is the last round
+        if (round.value == roundImages.length) {
+          // Navigate to SplashPage for the final round
+          Get.offAll(() => const SplashPage());
+          return; // Stop further execution
+        }
+
+        Future.delayed(const Duration(seconds: 3), () async {
+          await playRingSound();
+        });
+
+        Future.delayed(const Duration(seconds: 3), _showBankerOffer);
       }
     }
   }
@@ -204,7 +267,11 @@ class PriceController extends GetxController {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      await ringPlayer.stop();
+                      audioPlayer.dispose();
+                      clappingPlayer.dispose();
+                      ringPlayer.dispose();
                       Get.back(); // Close the dialog
                       _endGame();
                     },
@@ -280,10 +347,18 @@ class PriceController extends GetxController {
         actions: [
           TextButton(
             onPressed: () {
-              clearCurrentState();
-              Get.back(); // Close the dialog
-              // Reset all states and restart the app
-              Get.offAll(() => const SplashPage());
+              // Close the dialog
+              Get.back();
+
+              // Update the price lists and notify listeners
+              priceListOneDynamic.refresh(); // Refresh priceListOneDynamic
+              priceListTwoDynamic.refresh(); // Refresh priceListTwoDynamic
+              update(); // Notify GetX controller to update UI
+
+              // Navigate to SplashPage after the dialog closes
+              Future.delayed(const Duration(milliseconds: 300), () {
+                Get.offAll(() => const SplashPage());
+              });
             },
             child: const Text("Exit"),
           ),
@@ -301,36 +376,35 @@ class PriceController extends GetxController {
     selectedCases.clear();
   }
 
-  void clearCurrentState() {
-    caseDynamic.clear();
-    priceImagesDynamic.clear();
-    priceListOneDynamic.clear();
-    priceListTwoDynamic.clear();
-    caseDynamic.value = cases; // Dummy case images
-    priceImagesDynamic.value = priceImages; // Dummy price images
-    priceListOneDynamic.value = priceListOne;
-    priceListTwoDynamic.value = priceListTwo;
-
-    // Shuffle data as necessary
-    caseDynamic.shuffle();
-    priceImagesDynamic.shuffle();
-  }
-
   @override
   void onInit() {
     super.onInit();
 
-    // Initialize the lists with dummy data or external data
-    caseDynamic.value = cases; // Dummy case images
-    priceImagesDynamic.value = priceImages; // Dummy price images
-    priceListOneDynamic.value = priceListOne;
-    priceListTwoDynamic.value = priceListTwo;
+    // Reset the lists to their original states (if needed)
+    caseDynamic.value = List.from(cases); // Reset to original case images
+    priceImagesDynamic.value =
+        List.from(priceImages); // Reset to original price images
 
-    // Shuffle data as necessary
-    caseDynamic.shuffle();
+    // Update dynamic lists from the static ones
+    priceListOneDynamic.value = List.from(priceListOne);
+    priceListTwoDynamic.value = List.from(priceListTwo);
+
+    // Call update() after making changes to the dynamic lists
+
+    // Debugging: Check contents of dynamic lists
+    debugPrint(
+        "this is the length of priceListOneDynamic: ${priceListOneDynamic.length}");
+    debugPrint(
+        "this is the contents of priceListOneDynamic: $priceListOneDynamic");
+
+    debugPrint(
+        "this is the length of priceListTwoDynamic: ${priceListTwoDynamic.length}");
+    debugPrint(
+        "this is the contents of priceListTwoDynamic: $priceListTwoDynamic");
+
+    // Shuffle data as necessary for each round
+    // caseDynamic.shuffle();
     priceImagesDynamic.shuffle();
-    // priceListOneDynamic.shuffle();
-    // priceListTwoDynamic.shuffle();
   }
 
   @override

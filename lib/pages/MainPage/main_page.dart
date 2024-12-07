@@ -1,11 +1,17 @@
 import 'package:deal_or_not_deal/Controllers/price_controller.dart';
 import 'package:deal_or_not_deal/pages/MainPage/widgets/price_list.dart';
+import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     PriceController priceController = Get.put(PriceController());
@@ -67,15 +73,26 @@ class MainPage extends StatelessWidget {
                                 ))
                             : Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 7.0,
-                                    horizontal: 8), // Add spacing here
+                                  vertical: 7.0,
+                                  horizontal: 8, // Add spacing here
+                                ),
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
                                   height: 40,
                                   decoration: BoxDecoration(
-                                      color: Colors.amber.shade300,
-                                      borderRadius: BorderRadius.circular(4)),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        AppColors.primaryColor,
+                                        AppColors.secondPrimaryColor
+                                      ],
+                                      begin: Alignment
+                                          .centerLeft, // Gradient starts from left
+                                      end: Alignment
+                                          .centerRight, // Gradient ends at right
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -96,7 +113,8 @@ class MainPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                ));
+                                ),
+                              );
                       },
                     );
                   })),
@@ -105,15 +123,14 @@ class MainPage extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  Card(
-                    child: Container(
-                      height: 120,
-                      width: MediaQuery.sizeOf(context).width,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("images/logo.jpg"),
-                          fit: BoxFit.contain,
-                        ),
+                  Container(
+                    height: 120,
+                    width: MediaQuery.sizeOf(context).width,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                      image: DecorationImage(
+                        image: AssetImage("images/logo.png"),
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -148,8 +165,6 @@ class MainPage extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     String caseImage =
                                         priceController.caseDynamic[index];
-                                    bool isTapped =
-                                        priceController.tappedCases[index];
 
                                     return GestureDetector(
                                       onTap: () =>
@@ -262,7 +277,16 @@ class MainPage extends StatelessWidget {
                                     const EdgeInsets.only(left: 8, right: 8),
                                 height: 40,
                                 decoration: BoxDecoration(
-                                    color: Colors.amber.shade300,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        AppColors.primaryColor,
+                                        AppColors.secondPrimaryColor
+                                      ],
+                                      begin: Alignment
+                                          .centerLeft, // Gradient starts from left
+                                      end: Alignment
+                                          .centerRight, // Gradient ends at right
+                                    ),
                                     borderRadius: BorderRadius.circular(4)),
                                 child: Row(
                                   mainAxisAlignment:
