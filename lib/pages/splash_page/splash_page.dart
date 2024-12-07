@@ -1,10 +1,16 @@
-import 'package:deal_or_not_deal/pages/MainPage/main_page.dart';
-import 'package:deal_or_not_deal/utills/colors.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:deal_or_not_deal/pages/MainPage/main_page.dart';
+import 'package:deal_or_not_deal/utills/colors.dart';
+
 class SplashPage extends StatelessWidget {
-  const SplashPage({super.key});
+  Map<String, dynamic> uaerscase;
+  SplashPage({
+    super.key,
+    required this.uaerscase,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +18,13 @@ class SplashPage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () {
-          Get.offAll(() {
-            // Reset Game State
-            return const MainPage();
-          });
+          Get.offAll(
+            () =>
+                // Reset Game State
+                MainPage(
+              selectedUserData: uaerscase,
+            ),
+          );
         },
         child: Container(
           height: 56,

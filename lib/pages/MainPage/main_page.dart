@@ -1,20 +1,32 @@
-import 'package:deal_or_not_deal/Controllers/price_controller.dart';
-import 'package:deal_or_not_deal/pages/MainPage/widgets/price_list.dart';
-import 'package:deal_or_not_deal/utills/colors.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:deal_or_not_deal/Controllers/price_controller.dart';
+import 'package:deal_or_not_deal/utills/colors.dart';
+
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final Map<String, dynamic> selectedUserData;
+  const MainPage({
+    super.key,
+    required this.selectedUserData,
+  });
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  PriceController priceController = Get.put(PriceController());
+
+  @override
+  void initState() {
+    priceController.getData(widget.selectedUserData["caseImage"]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    PriceController priceController = Get.put(PriceController());
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -123,15 +135,38 @@ class _MainPageState extends State<MainPage> {
             Expanded(
               child: Column(
                 children: [
-                  Container(
-                    height: 120,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      image: DecorationImage(
-                        image: AssetImage("images/logo.png"),
-                        fit: BoxFit.contain,
-                      ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 120,
+                          width: 700,
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                            image: DecorationImage(
+                              image: AssetImage("images/logo.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            debugPrint(
+                                "this is user case Image : ${priceController.userCaseImage}");
+                          },
+                          child: Container(
+                            height: 120,
+                            width: 120,
+                            child: Image.asset(
+                              priceController.userCaseImage.value,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),

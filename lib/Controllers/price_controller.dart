@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
+import 'package:deal_or_not_deal/pages/FirstPage/first_page.dart';
 import 'package:deal_or_not_deal/utills/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +18,8 @@ class PriceController extends GetxController {
   var priceImagesDynamic = <String>[].obs;
   RxList<Map<String, dynamic>> priceListOneDynamic = RxList([]);
   RxList<Map<String, dynamic>> priceListTwoDynamic = RxList([]);
-
+  RxString userCaseImage = "".obs;
+  RxString userCasePriceImage = "".obs;
   var tappedCases = List.generate(26, (index) => false).obs;
   var round = 1.obs;
   var maxCasesPerRound = 6.obs;
@@ -193,7 +194,7 @@ class PriceController extends GetxController {
         // Check if it is the last round
         if (round.value == roundImages.length) {
           // Navigate to SplashPage for the final round
-          Get.offAll(() => const SplashPage());
+          Get.offAll(() => const FirstPage());
           return; // Stop further execution
         }
 
@@ -357,7 +358,7 @@ class PriceController extends GetxController {
 
               // Navigate to SplashPage after the dialog closes
               Future.delayed(const Duration(milliseconds: 300), () {
-                Get.offAll(() => const SplashPage());
+                Get.offAll(() => const FirstPage());
               });
             },
             child: const Text("Exit"),
@@ -376,10 +377,7 @@ class PriceController extends GetxController {
     selectedCases.clear();
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-
+  void getData(String targetCase) {
     // Reset the lists to their original states (if needed)
     caseDynamic.value = List.from(cases); // Reset to original case images
     priceImagesDynamic.value =
@@ -388,8 +386,6 @@ class PriceController extends GetxController {
     // Update dynamic lists from the static ones
     priceListOneDynamic.value = List.from(priceListOne);
     priceListTwoDynamic.value = List.from(priceListTwo);
-
-    // Call update() after making changes to the dynamic lists
 
     // Debugging: Check contents of dynamic lists
     debugPrint(
@@ -402,9 +398,27 @@ class PriceController extends GetxController {
     debugPrint(
         "this is the contents of priceListTwoDynamic: $priceListTwoDynamic");
 
-    // Shuffle data as necessary for each round
-    // caseDynamic.shuffle();
+    // Shuffle the lists for randomness
     priceImagesDynamic.shuffle();
+
+    if (caseDynamic.contains(targetCase)) {
+      // Remove the string and assign it to selectedCaseImage
+      userCaseImage.value = targetCase;
+      caseDynamic.remove(targetCase);
+      debugPrint("Selected case image: $userCaseImage.value");
+      debugPrint("Updated caseDynamic: $caseDynamic");
+    } else {
+      debugPrint("Target string not found in caseDynamic.");
+    }
+
+    // Randomly select a price image and remove it from priceImagesDynamic
+    if (priceImagesDynamic.isNotEmpty) {
+      userCasePriceImage.value = priceImagesDynamic.removeAt(0);
+      debugPrint("Selected price image: $userCasePriceImage.value");
+      debugPrint("Updated priceImagesDynamic: $priceImagesDynamic");
+    } else {
+      debugPrint("Price images list is empty.");
+    }
   }
 
   @override
