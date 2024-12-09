@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SelectUser extends StatefulWidget {
-  final List<String> usersName;
+  final List<Map<String, dynamic>> usersName;
 
   const SelectUser({
     super.key,
@@ -70,59 +70,59 @@ class _SelectUserState extends State<SelectUser> {
                           return GestureDetector(
                             onTap: () {
                               // Lock further interaction once a username is revealed
-                              if (!usernameRevealed) {
-                                if (!assignedUsers
-                                        .containsKey(widget.usersName.first) &&
-                                    widget.usersName.isNotEmpty) {
-                                  String selectedUsername =
-                                      widget.usersName.removeAt(0);
-                                  // Store the username and associated caseImage
-                                  assignedUsers.value = {
-                                    'caseImage': caseImage,
-                                    "userName": selectedUsername,
-                                  };
-                                }
-                                revealedIndex.value = index;
-                                setState(() {
-                                  usernameRevealed = true; // Lock further taps
-                                });
+                              // if (!usernameRevealed) {
+                              //   if (!assignedUsers
+                              //           .containsKey(widget.usersName.first) &&
+                              //       widget.usersName.isNotEmpty) {
+                              //     String selectedUsername =
+                              //         widget.usersName.removeAt(0);
+                              //     // Store the username and associated caseImage
+                              //     assignedUsers.value = {
+                              //       'caseImage': caseImage,
+                              //       "userName": selectedUsername,
+                              //     };
+                              //   }
+                              //   revealedIndex.value = index;
+                              //   setState(() {
+                              //     usernameRevealed = true; // Lock further taps
+                              //   });
 
-                                // Show the dialog with username
-                                Get.dialog(
-                                  Dialog(
-                                    backgroundColor: Colors.transparent,
-                                    child: Container(
-                                      height: 500,
-                                      width: 500,
-                                      decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                          image:
-                                              AssetImage("images/caseopen.png"),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          assignedUsers['userName'],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 34,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  barrierDismissible: false,
-                                );
-                                Future.delayed(const Duration(seconds: 7), () {
-                                  Get.back();
-                                  Get.offAll(
-                                    () => SplashPage(
-                                      uaerscase: assignedUsers,
-                                    ),
-                                  );
-                                });
-                              }
+                              //   // Show the dialog with username
+                              //   Get.dialog(
+                              //     Dialog(
+                              //       backgroundColor: Colors.transparent,
+                              //       child: Container(
+                              //         height: 500,
+                              //         width: 500,
+                              //         decoration: const BoxDecoration(
+                              //           image: DecorationImage(
+                              //             image:
+                              //                 AssetImage("images/caseopen.png"),
+                              //           ),
+                              //         ),
+                              //         child: Center(
+                              //           child: Text(
+                              //             assignedUsers['userName'],
+                              //             style: const TextStyle(
+                              //               fontWeight: FontWeight.bold,
+                              //               fontSize: 34,
+                              //               color: Colors.black,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     barrierDismissible: false,
+                              //   );
+                              //   Future.delayed(const Duration(seconds: 7), () {
+                              //     Get.back();
+                              //     Get.offAll(
+                              //       () => SplashPage(
+                              //         uaerscase: assignedUsers,
+                              //       ),
+                              //     );
+                              //   });
+                              // }
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
