@@ -63,7 +63,7 @@ class _SelectUserState extends State<SelectUser> {
     for (int i = 0; i <= cycles + finalIndex; i++) {
       highlightedIndex.value = i % widget.usersName.length;
       await Future.delayed(
-          Duration(milliseconds: 100 + (i * 10))); // Gradually slow down
+          Duration(milliseconds: 80 + (i * 10))); // Gradually slow down
     }
 
     animationInProgress.value = false;
