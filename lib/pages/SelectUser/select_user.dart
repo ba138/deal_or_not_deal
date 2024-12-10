@@ -25,15 +25,26 @@ class _SelectUserState extends State<SelectUser> {
   Map<String, dynamic> selectedUser = {}; // Holds the final selected user data
   final AudioPlayer audioPlayer = AudioPlayer();
   late AudioPlayer userSelectionSound;
+  late AudioPlayer startingSound;
+  Future<void> playStartingSound() async {
+    startingSound = AudioPlayer();
+    await startingSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    await startingSound.play(DeviceFileSource("audio/starting_sound.mp3"));
+
+    // Stop the sound after 3 seconds
+  }
+
+  Future<void> stopStartingSoundAndNavigate() async {
+    await startingSound.stop();
+
+    // Get.offAll(() => const InputForum());
+  }
+
   Future<void> startUserSelectionSound() async {
     userSelectionSound = AudioPlayer();
     await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await userSelectionSound.play(DeviceFileSource("audio/drum_roll.mp3"));
-
-    // Stop the sound after 3 seconds
-    // Future.delayed(const Duration(seconds: 3), () async {
-    //   await dumroll.stop();
-    // });
+    await userSelectionSound
+        .play(DeviceFileSource("audio/player_selection_sound.mp3"));
   }
 
   Future<void> stopUserSelectionSound() async {
@@ -42,7 +53,7 @@ class _SelectUserState extends State<SelectUser> {
 
   void startSelectionAnimation() async {
     if (animationInProgress.value) return;
-
+    playStartingSound();
     animationInProgress.value = true;
     int cycles = 20; // Number of cycles before the selection stops
     int finalIndex =
@@ -57,30 +68,33 @@ class _SelectUserState extends State<SelectUser> {
 
     animationInProgress.value = false;
     selectedUser = widget.usersName[finalIndex];
-    stopUserSelectionSound();
+    stopStartingSoundAndNavigate();
+    startUserSelectionSound();
+
     // Display winner announcement dialog
     Get.dialog(
       Dialog(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.primaryColor,
         child: Container(
           height: 300,
           width: 300,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                  "assets/images/winner_dialog.png"), // Customize this path
-              fit: BoxFit.cover,
-            ),
-          ),
+          decoration: const BoxDecoration(color: AppColors.primaryColor),
           child: Center(
-            child: Text(
-              "${selectedUser['userName']} Wins!",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-                color: Colors.white,
+            child: Container(
+              height: 56,
+              width: 250,
+              color: Colors.white,
+              child: Center(
+                child: Text(
+                  "${selectedUser['userName']} Wins!",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -89,6 +103,8 @@ class _SelectUserState extends State<SelectUser> {
 
     // Navigate after dialog dismissal (optional)
     Future.delayed(const Duration(seconds: 5), () {
+      stopUserSelectionSound();
+
       Get.back(); // Close the dialog
       Get.offAll(() => SplashPage(uaerscase: selectedUser));
     });
