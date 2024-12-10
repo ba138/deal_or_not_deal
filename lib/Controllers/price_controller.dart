@@ -422,10 +422,10 @@ class PriceController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void dispose() {
     audioPlayer.dispose();
     clappingPlayer.dispose();
     ringPlayer.dispose();
-    super.onClose();
+    super.dispose();
   }
 }

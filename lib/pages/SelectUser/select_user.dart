@@ -1,7 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
-import 'package:deal_or_not_deal/utills/res.dart';
+import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:math';
 
 class SelectUser extends StatefulWidget {
   final List<Map<String, dynamic>> usersName;
@@ -16,163 +18,192 @@ class SelectUser extends StatefulWidget {
 }
 
 class _SelectUserState extends State<SelectUser> {
-  final RxInt revealedIndex = (-1).obs; // Tracks the currently revealed index
-  RxMap<String, dynamic> assignedUsers =
-      <String, dynamic>{}.obs; // Tracks assigned usernames and case images
-  bool usernameRevealed = false; // Locks interaction after username is revealed
-  List<String> caseDynamic = [];
+  final RxInt highlightedIndex =
+      (-1).obs; // Current highlighted box during animation
+  final RxBool animationInProgress = false.obs; // Tracks animation state
+  final Random random = Random();
+  Map<String, dynamic> selectedUser = {}; // Holds the final selected user data
+  final AudioPlayer audioPlayer = AudioPlayer();
+  late AudioPlayer userSelectionSound;
+  Future<void> startUserSelectionSound() async {
+    userSelectionSound = AudioPlayer();
+    await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    await userSelectionSound.play(DeviceFileSource("audio/drum_roll.mp3"));
+
+    // Stop the sound after 3 seconds
+    // Future.delayed(const Duration(seconds: 3), () async {
+    //   await dumroll.stop();
+    // });
+  }
+
+  Future<void> stopUserSelectionSound() async {
+    await userSelectionSound.stop();
+  }
+
+  void startSelectionAnimation() async {
+    if (animationInProgress.value) return;
+
+    animationInProgress.value = true;
+    int cycles = 20; // Number of cycles before the selection stops
+    int finalIndex =
+        random.nextInt(widget.usersName.length); // Randomly chosen box
+
+    // Animation loop
+    for (int i = 0; i <= cycles + finalIndex; i++) {
+      highlightedIndex.value = i % widget.usersName.length;
+      await Future.delayed(
+          Duration(milliseconds: 100 + (i * 10))); // Gradually slow down
+    }
+
+    animationInProgress.value = false;
+    selectedUser = widget.usersName[finalIndex];
+    stopUserSelectionSound();
+    // Display winner announcement dialog
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          height: 300,
+          width: 300,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  "assets/images/winner_dialog.png"), // Customize this path
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              "${selectedUser['userName']} Wins!",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Navigate after dialog dismissal (optional)
+    Future.delayed(const Duration(seconds: 5), () {
+      Get.back(); // Close the dialog
+      Get.offAll(() => SplashPage(uaerscase: selectedUser));
+    });
+  }
 
   @override
-  void initState() {
-    widget.usersName.shuffle(); // Shuffle usernames for randomness
-    caseDynamic = cases;
-
-    super.initState();
+  void dispose() {
+    userSelectionSound.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Card(
-          child: Container(
-            height: MediaQuery.sizeOf(context).height / 0.9,
-            width: MediaQuery.sizeOf(context).width,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade700.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Colors.white,
-                width: 2,
-                strokeAlign: BorderSide.strokeAlignCenter,
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 20.0,
+                  childAspectRatio: 1.5,
+                ),
+                itemCount: widget.usersName.length,
+                itemBuilder: (context, index) {
+                  String caseImage = widget.usersName[index]['caseImage']!;
+                  // String userName = widget.usersName[index]['userName']!;
+
+                  return Obx(
+                    () => Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 4,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: highlightedIndex.value == index
+                              ? Colors.white
+                              : Colors.transparent,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset(
+                              caseImage,
+                              fit: BoxFit.contain,
+                            ),
+                            // if (highlightedIndex.value == index)
+                            //   Text(
+                            //     userName,
+                            //     style: const TextStyle(
+                            //       fontWeight: FontWeight.bold,
+                            //       fontSize: 16,
+                            //       color: Colors.black,
+                            //     ),
+                            //     textAlign: TextAlign.center,
+                            //   ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 7,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
-                          childAspectRatio: 1.2,
-                        ),
-                        itemCount: caseDynamic.length,
-                        itemBuilder: (context, index) {
-                          String caseImage = caseDynamic[index];
-
-                          return GestureDetector(
-                            onTap: () {
-                              // Lock further interaction once a username is revealed
-                              // if (!usernameRevealed) {
-                              //   if (!assignedUsers
-                              //           .containsKey(widget.usersName.first) &&
-                              //       widget.usersName.isNotEmpty) {
-                              //     String selectedUsername =
-                              //         widget.usersName.removeAt(0);
-                              //     // Store the username and associated caseImage
-                              //     assignedUsers.value = {
-                              //       'caseImage': caseImage,
-                              //       "userName": selectedUsername,
-                              //     };
-                              //   }
-                              //   revealedIndex.value = index;
-                              //   setState(() {
-                              //     usernameRevealed = true; // Lock further taps
-                              //   });
-
-                              //   // Show the dialog with username
-                              //   Get.dialog(
-                              //     Dialog(
-                              //       backgroundColor: Colors.transparent,
-                              //       child: Container(
-                              //         height: 500,
-                              //         width: 500,
-                              //         decoration: const BoxDecoration(
-                              //           image: DecorationImage(
-                              //             image:
-                              //                 AssetImage("images/caseopen.png"),
-                              //           ),
-                              //         ),
-                              //         child: Center(
-                              //           child: Text(
-                              //             assignedUsers['userName'],
-                              //             style: const TextStyle(
-                              //               fontWeight: FontWeight.bold,
-                              //               fontSize: 34,
-                              //               color: Colors.black,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     barrierDismissible: false,
-                              //   );
-                              //   Future.delayed(const Duration(seconds: 7), () {
-                              //     Get.back();
-                              //     Get.offAll(
-                              //       () => SplashPage(
-                              //         uaerscase: assignedUsers,
-                              //       ),
-                              //     );
-                              //   });
-                              // }
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              elevation: 4,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    if (revealedIndex.value != index &&
-                                        caseImage.isNotEmpty)
-                                      Image.asset(
-                                        caseImage,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    if (revealedIndex.value == index &&
-                                        assignedUsers.isNotEmpty)
-                                      Text(
-                                        assignedUsers.keys.first,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Colors.transparent,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+            const SizedBox(height: 20),
+            Obx(
+              () => InkWell(
+                onTap:
+                    animationInProgress.value ? null : startSelectionAnimation,
+                child: Container(
+                  height: 56,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        AppColors.primaryColor,
+                        AppColors.secondPrimaryColor
+                      ],
+                      begin: Alignment.centerLeft, // Start from the left
+                      end: Alignment.centerRight, // End at the right
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Chose Player",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                ),
               ),
+
+              // ElevatedButton(
+              //   onPressed:
+              //      ,
+              //   child: const Text(
+              //     "Choose Player",
+              //     style: TextStyle(fontSize: 18),
+              //   ),
+              // ),
             ),
-          ),
+          ],
         ),
       ),
     );

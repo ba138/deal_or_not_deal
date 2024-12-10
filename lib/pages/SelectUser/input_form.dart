@@ -67,7 +67,7 @@ class _InputForumState extends State<InputForum> {
         );
 
         // Close pop-up after delay
-        Future.delayed(const Duration(seconds: 5), () {
+        Future.delayed(const Duration(seconds: 2), () {
           Get.back();
           if (players.length == 26) {
             Get.offAll(() => SelectUser(
