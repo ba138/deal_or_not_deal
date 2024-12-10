@@ -17,12 +17,6 @@ class _InputForumState extends State<InputForum> {
   List<String> cases = List.generate(
       26, (index) => "images/Case ${index + 1}.png"); // Global case images list
 
-  @override
-  void initState() {
-    super.initState();
-    cases.shuffle(); // Shuffle cases to assign randomly
-  }
-
   void addPlayer() {
     if (_controller.text.isNotEmpty) {
       String playerName = _controller.text.trim();

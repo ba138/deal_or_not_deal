@@ -74,31 +74,31 @@ class _SelectUserState extends State<SelectUser> {
     // Display winner announcement dialog
     Get.dialog(
       Dialog(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: Colors.transparent,
         child: Container(
-          height: 300,
-          width: 300,
-          decoration: const BoxDecoration(color: AppColors.primaryColor),
-          child: Center(
-            child: Container(
-              height: 56,
-              width: 250,
-              color: Colors.white,
-              child: Center(
-                child: Text(
-                  "${selectedUser['userName']} Wins!",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
+          height: 500,
+          width: 500,
+          decoration: const BoxDecoration(
+            image: DecorationImage(image: AssetImage("images/caseopen.png")),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "${selectedUser['userName']} Wins!",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                  color: Colors.black,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ),
+            ],
           ),
         ),
       ),
+      barrierDismissible: false,
     );
 
     // Navigate after dialog dismissal (optional)
@@ -118,6 +118,7 @@ class _SelectUserState extends State<SelectUser> {
 
   @override
   Widget build(BuildContext context) {
+    widget.usersName.reversed;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(40.0),

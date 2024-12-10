@@ -400,25 +400,6 @@ class PriceController extends GetxController {
 
     // Shuffle the lists for randomness
     priceImagesDynamic.shuffle();
-
-    if (caseDynamic.contains(targetCase)) {
-      // Remove the string and assign it to selectedCaseImage
-      userCaseImage.value = targetCase;
-      caseDynamic.remove(targetCase);
-      debugPrint("Selected case image: $userCaseImage.value");
-      debugPrint("Updated caseDynamic: $caseDynamic");
-    } else {
-      debugPrint("Target string not found in caseDynamic.");
-    }
-
-    // Randomly select a price image and remove it from priceImagesDynamic
-    if (priceImagesDynamic.isNotEmpty) {
-      userCasePriceImage.value = priceImagesDynamic.removeAt(0);
-      debugPrint("Selected price image: $userCasePriceImage.value");
-      debugPrint("Updated priceImagesDynamic: $priceImagesDynamic");
-    } else {
-      debugPrint("Price images list is empty.");
-    }
   }
 
   @override

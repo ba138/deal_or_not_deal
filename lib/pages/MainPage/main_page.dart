@@ -136,37 +136,16 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 700,
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                            image: DecorationImage(
-                              image: AssetImage("images/logo.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                    child: Container(
+                      height: 120,
+                      width: 700,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          image: AssetImage("images/logo.png"),
+                          fit: BoxFit.contain,
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            debugPrint(
-                                "this is user case Image : ${priceController.userCaseImage}");
-                          },
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            child: Image.asset(
-                              priceController.userCaseImage.value,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
