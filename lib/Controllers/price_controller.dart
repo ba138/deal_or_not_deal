@@ -12,7 +12,9 @@ class PriceController extends GetxController {
   late AudioPlayer clappingPlayer; // Separate player for clapping sound
   late AudioPlayer ringPlayer; // Separate player for ringing sound
   late AudioPlayer dumroll;
-
+  RxString? removedCaseImage;
+  RxString? removedPriceImage;
+  RxString? removedPriceImage2;
   // Reactive lists to manage the case and price images
   var caseDynamic = <String>[].obs;
   var priceImagesDynamic = <String>[].obs;
@@ -26,6 +28,8 @@ class PriceController extends GetxController {
   var selectedCases = <int>[].obs;
   var revealedCases = <int>[].obs;
   var bankerOffer = 0.obs;
+  RxBool isSwap = false.obs;
+  RxBool showbuttons = false.obs;
   var roundImages = <String>[
     "images/6 Cases To Open.png",
     "images/5 Cases To Open.png",
@@ -48,7 +52,6 @@ class PriceController extends GetxController {
 
   Future<void> drumRollSound() async {
     dumroll = AudioPlayer();
-    await dumroll.setReleaseMode(ReleaseMode.loop); // Loop the sound
     await dumroll.play(DeviceFileSource("audio/drum_roll.mp3"));
 
     // Stop the sound after 3 seconds
@@ -192,11 +195,6 @@ class PriceController extends GetxController {
       // Check if the maximum number of cases have been selected
       if (selectedCases.length == maxCasesPerRound.value) {
         // Check if it is the last round
-        if (round.value == roundImages.length) {
-          // Navigate to SplashPage for the final round
-          Get.offAll(() => const FirstPage());
-          return; // Stop further execution
-        }
 
         Future.delayed(const Duration(seconds: 3), () async {
           await playRingSound();
@@ -270,6 +268,7 @@ class PriceController extends GetxController {
                   InkWell(
                     onTap: () async {
                       await ringPlayer.stop();
+                      ringPlayer.dispose();
                       audioPlayer.dispose();
                       clappingPlayer.dispose();
                       ringPlayer.dispose();
@@ -306,9 +305,22 @@ class PriceController extends GetxController {
                   const SizedBox(width: 12),
                   InkWell(
                     onTap: () {
-                      stopRingSound(); // Stop the ringing sound
-                      Get.back(); // Close the dialog
-                      nextRound();
+                      int emptyCount =
+                          priceImagesDynamic.where((item) => item == "").length;
+                      debugPrint(
+                          "this is the lenght of caseDynamic:$emptyCount");
+                      if (emptyCount == 24) {
+                        showbuttons.value = true;
+                        debugPrint(
+                            "this is value of showbutton:${showbuttons.value}");
+                        stopRingSound(); // Stop the ringing sound
+                        Get.back();
+                        update();
+                      } else {
+                        stopRingSound(); // Stop the ringing sound
+                        Get.back(); // Close the dialog
+                        nextRound();
+                      }
                     },
                     child: Container(
                       height: 56,
@@ -377,6 +389,41 @@ class PriceController extends GetxController {
     selectedCases.clear();
   }
 
+  void swapElements(
+    String caseImage,
+  ) {
+    // Temporary variables to hold the values being swapped out
+    isSwap.value = true;
+    // Find the first non-empty element in caseDynamic
+    int caseIndex = caseDynamic.indexWhere((element) => element.isNotEmpty);
+
+    // Find the first non-empty element in priceImagesDynamic
+    int priceIndex =
+        priceImagesDynamic.indexWhere((element) => element.isNotEmpty);
+
+    if (caseIndex != -1 && priceIndex != -1) {
+      // Assign the current non-empty values to the temporary variables
+      userCaseImage.value = caseDynamic[caseIndex];
+      removedPriceImage?.value = priceImagesDynamic[priceIndex];
+
+      // Swap the provided values into the lists
+      caseDynamic[caseIndex] = caseImage;
+      priceImagesDynamic[priceIndex] = removedPriceImage2!.value;
+
+      // Notify the UI about the updates
+      caseDynamic.refresh();
+      priceImagesDynamic.refresh();
+
+      // Debugging: Print the swapped values
+      debugPrint("Swapped caseImage: $removedCaseImage with $caseImage");
+      debugPrint(
+          "Swapped priceImage: $removedPriceImage with ${removedPriceImage2!.value}");
+    } else {
+      // Handle the case where no non-empty element is found
+      debugPrint("No non-empty elements found to swap.");
+    }
+  }
+
   void getData(String targetCase) {
     // Reset the lists to their original states (if needed)
     caseDynamic.value = List.from(cases); // Reset to original case images
@@ -400,6 +447,71 @@ class PriceController extends GetxController {
 
     // Shuffle the lists for randomness
     priceImagesDynamic.shuffle();
+
+    if (caseDynamic.contains(targetCase)) {
+      // Remove the string and assign it to selectedCaseImage
+      userCaseImage.value = targetCase;
+      caseDynamic.remove(targetCase);
+      debugPrint("Selected case image: $userCaseImage.value");
+      debugPrint("Updated caseDynamic: $caseDynamic");
+    } else {
+      debugPrint("Target string not found in caseDynamic.");
+    }
+
+    // Randomly select a price image and remove it from priceImagesDynamic
+    if (priceImagesDynamic.isNotEmpty) {
+      // Assign the value to a temporary string variable before removal
+      removedPriceImage2?.value = priceImagesDynamic.first;
+
+      // Remove the selected price image and update the userCasePriceImage
+      userCasePriceImage.value = priceImagesDynamic.removeAt(0);
+
+      // Debugging: Log the removed and updated lists
+      debugPrint("Removed price image: $removedPriceImage");
+      debugPrint("Selected price image: ${userCasePriceImage.value}");
+      debugPrint("Updated priceImagesDynamic: $priceImagesDynamic");
+
+      // Optionally remove the selected price image from other dynamic lists
+      priceListOneDynamic
+          .removeWhere((item) => item['image'] == removedPriceImage);
+      priceListTwoDynamic
+          .removeWhere((item) => item['image'] == removedPriceImage);
+
+      // Debugging: Confirm removal from other lists
+      debugPrint(
+          "Updated priceListOneDynamic after removal: $priceListOneDynamic");
+      debugPrint(
+          "Updated priceListTwoDynamic after removal: $priceListTwoDynamic");
+    } else {
+      debugPrint("Price images list is empty.");
+    }
+  }
+
+  void revealPlayerCase() {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          height: 500,
+          width: 500,
+          decoration: const BoxDecoration(
+            image: DecorationImage(image: AssetImage("images/caseopen.png")),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                removedPriceImage2!.value,
+                height: 400,
+                width: 400,
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
   }
 
   @override

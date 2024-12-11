@@ -136,16 +136,31 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 120,
-                      width: 700,
-                      decoration: const BoxDecoration(
-                        color: Colors.transparent,
-                        image: DecorationImage(
-                          image: AssetImage("images/logo.png"),
-                          fit: BoxFit.contain,
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 120,
+                          width: 600,
+                          decoration: const BoxDecoration(
+                            color: Colors.transparent,
+                            image: DecorationImage(
+                              image: AssetImage("images/logo.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Obx(
+                          () => SizedBox(
+                            child: Image.asset(
+                              priceController.userCaseImage.value,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -211,13 +226,111 @@ class _MainPageState extends State<MainPage> {
                               }),
                             ),
                             Obx(
-                              () => Image.asset(
-                                priceController.roundImages[
-                                    priceController.round.value - 1],
-                                height: 70,
-                                width: MediaQuery.sizeOf(context).width,
-                                fit: BoxFit.contain,
-                              ),
+                              () => priceController.showbuttons.value != true
+                                  ? Image.asset(
+                                      priceController.roundImages[
+                                          priceController.round.value - 1],
+                                      height: 70,
+                                      width: MediaQuery.sizeOf(context).width,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            if (priceController.isSwap.value ==
+                                                false) {
+                                              priceController.swapElements(
+                                                  widget.selectedUserData[
+                                                      'caseImage']);
+                                            } else {
+                                              Get.snackbar(
+                                                  "Swap", "Already Swap");
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 56,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              gradient: priceController
+                                                          .isSwap.value ==
+                                                      false
+                                                  ? const LinearGradient(
+                                                      colors: [
+                                                        AppColors.primaryColor,
+                                                        AppColors
+                                                            .secondPrimaryColor
+                                                      ],
+                                                      begin: Alignment
+                                                          .centerLeft, // Start from the left
+                                                      end: Alignment
+                                                          .centerRight, // End at the right
+                                                    )
+                                                  : const LinearGradient(
+                                                      colors: [
+                                                        AppColors.primaryColor,
+                                                        AppColors.primaryColor
+                                                      ],
+                                                      begin: Alignment
+                                                          .centerLeft, // Start from the left
+                                                      end: Alignment
+                                                          .centerRight, // End at the right
+                                                    ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                "Swap",
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 30,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            priceController.revealPlayerCase();
+                                          },
+                                          child: Container(
+                                            height: 56,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                              gradient: const LinearGradient(
+                                                colors: [
+                                                  AppColors.primaryColor,
+                                                  AppColors.secondPrimaryColor
+                                                ],
+                                                begin: Alignment
+                                                    .centerLeft, // Start from the left
+                                                end: Alignment
+                                                    .centerRight, // End at the right
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                "Reveal",
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                             const SizedBox(
                               height: 20,
