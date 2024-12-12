@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:deal_or_not_deal/pages/FirstPage/first_page.dart';
+import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:deal_or_not_deal/utills/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class PriceController extends GetxController {
   late AudioPlayer dumroll;
   RxString? removedCaseImage;
   RxString? removedPriceImage;
-  RxString? removedPriceImage2;
+  RxString removedPriceImage2 = ''.obs;
   // Reactive lists to manage the case and price images
   var caseDynamic = <String>[].obs;
   var priceImagesDynamic = <String>[].obs;
@@ -65,15 +66,6 @@ class PriceController extends GetxController {
   }
 
   Future<void> playRingSound() async {
-    ringPlayer = AudioPlayer();
-    await ringPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await ringPlayer.play(DeviceFileSource("audio/phone Ring.mp3"));
-    Future.delayed(const Duration(seconds: 8), () async {
-      await ringPlayer.stop();
-    });
-  }
-
-  Future<void> playBankerOfferSound() async {
     ringPlayer = AudioPlayer();
     await ringPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
     await ringPlayer.play(DeviceFileSource("audio/phone Ring.mp3"));
@@ -195,18 +187,95 @@ class PriceController extends GetxController {
       // Check if the maximum number of cases have been selected
       if (selectedCases.length == maxCasesPerRound.value) {
         // Check if it is the last round
+        playRingSound();
+        Completer<void> completer = Completer<void>();
 
-        Future.delayed(const Duration(seconds: 3), () async {
-          await playRingSound();
-        });
-
-        Future.delayed(const Duration(seconds: 3), _showBankerOffer);
+        _showPhoneCall(completer);
+        await completer.future;
+        Get.back();
+        _showBankerOffer();
       }
     }
   }
 
+  void _showPhoneCall(Completer completer) {
+    Get.dialog(
+      Dialog(
+          backgroundColor: Colors.transparent,
+          child: SizedBox(
+            height: 500,
+            width: 500,
+            child: Column(
+              children: [
+                const Icon(
+                  Icons.phone_in_talk_rounded,
+                  size: 300,
+                ),
+                InkWell(
+                  onTap: () {
+                    stopRingSound();
+                    completer.complete();
+                  },
+                  child: Container(
+                    height: 56,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.primaryColor,
+                          AppColors.secondPrimaryColor
+                        ],
+                        begin: Alignment.centerLeft, // Start from the left
+                        end: Alignment.centerRight, // End at the right
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Get Offer",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+      barrierDismissible: false, // Prevent dismissal when tapping outside
+    );
+  }
+
   void _showBankerOffer() {
-    bankerOffer.value = Random().nextInt(10000) + 5000; // Example banker offer
+    List<int> priceValues = [];
+
+    for (var item in priceListOneDynamic) {
+      if (item['image'] != "") {
+        priceValues.add(int.parse(item['priceValue'].replaceAll(",", "")));
+      }
+    }
+
+    for (var item in priceListTwoDynamic) {
+      if (item['image'] != "") {
+        priceValues.add(int.parse(item['priceValue'].replaceAll(",", "")));
+      }
+    }
+
+    // Calculate RMS value
+    if (priceValues.isNotEmpty) {
+      double rms = sqrt(priceValues
+                  .map((value) => value * value) // Square each value
+                  .reduce((a, b) => a + b) / // Sum all squared values
+              priceValues.length // Divide by the number of values
+          ); // Take the square root
+
+      bankerOffer.value = rms.toInt(); // Set the banker offer to the RMS value
+    } else {
+      bankerOffer.value = Random().nextInt(10000) + 5000; // Fallback value
+    }
 
     Get.dialog(
       Dialog(
@@ -407,8 +476,9 @@ class PriceController extends GetxController {
       removedPriceImage?.value = priceImagesDynamic[priceIndex];
 
       // Swap the provided values into the lists
+      debugPrint("this is the image${removedPriceImage2.value}");
       caseDynamic[caseIndex] = caseImage;
-      priceImagesDynamic[priceIndex] = removedPriceImage2!.value;
+      priceImagesDynamic[priceIndex] = removedPriceImage2.value;
 
       // Notify the UI about the updates
       caseDynamic.refresh();
@@ -417,7 +487,7 @@ class PriceController extends GetxController {
       // Debugging: Print the swapped values
       debugPrint("Swapped caseImage: $removedCaseImage with $caseImage");
       debugPrint(
-          "Swapped priceImage: $removedPriceImage with ${removedPriceImage2!.value}");
+          "Swapped priceImage: $removedPriceImage with ${removedPriceImage2.value}");
     } else {
       // Handle the case where no non-empty element is found
       debugPrint("No non-empty elements found to swap.");
@@ -461,7 +531,7 @@ class PriceController extends GetxController {
     // Randomly select a price image and remove it from priceImagesDynamic
     if (priceImagesDynamic.isNotEmpty) {
       // Assign the value to a temporary string variable before removal
-      removedPriceImage2?.value = priceImagesDynamic.first;
+      removedPriceImage2.value = priceImagesDynamic.first;
 
       // Remove the selected price image and update the userCasePriceImage
       userCasePriceImage.value = priceImagesDynamic.removeAt(0);
@@ -487,7 +557,56 @@ class PriceController extends GetxController {
     }
   }
 
-  void revealPlayerCase() {
+  Future<void> revealPlayerCase() async {
+    Map<String, dynamic>? matchedItem;
+
+// First, check in priceListOne
+    matchedItem = priceListOne.firstWhere(
+      (item) => item['image'] == removedPriceImage2.value,
+      orElse: () => <String, dynamic>{}, // Return an empty map instead of null
+    );
+
+// If no match is found in priceListOne, check in priceListTwo
+    if (matchedItem.isEmpty) {
+      matchedItem = priceListTwo.firstWhere(
+        (item) => item['image'] == removedPriceImage2.value,
+        orElse: () =>
+            <String, dynamic>{}, // Return an empty map instead of null
+      );
+    }
+
+// Ensure a match is found in one of the lists
+    if (matchedItem.isNotEmpty) {
+      // Parse the priceValue and remove any commas
+      int priceValue = int.parse(matchedItem['priceValue'].replaceAll(",", ""));
+
+      // Compare the value and play the appropriate sound
+      if (priceValue > 2988) {
+        await playClappingSound(); // Play clapping sound for higher values
+      } else {
+        // await playDifferentSound(); // Play a different sound for lower values
+        drumRollSound();
+      }
+    } else {
+      // Handle the case where no match is found in both lists
+      debugPrint('No matching item found for image: $removedPriceImage');
+    }
+    for (var item in priceListOneDynamic) {
+      if (item['image'] == removedPriceImage2.value) {
+        item['image'] = ""; // Update the image
+        priceListOneDynamic.refresh(); // Notify UI
+        break;
+      }
+    }
+
+    for (var item in priceListTwoDynamic) {
+      if (item['image'] == removedPriceImage2.value) {
+        item['image'] = ""; // Update the image
+        priceListTwoDynamic.refresh(); // Notify UI
+        break;
+      }
+    }
+
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
@@ -502,7 +621,7 @@ class PriceController extends GetxController {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                removedPriceImage2!.value,
+                removedPriceImage2.value,
                 height: 400,
                 width: 400,
               ),

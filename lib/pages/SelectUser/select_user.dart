@@ -118,7 +118,6 @@ class _SelectUserState extends State<SelectUser> {
 
   @override
   Widget build(BuildContext context) {
-    widget.usersName.reversed;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(40.0),
