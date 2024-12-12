@@ -187,13 +187,26 @@ class PriceController extends GetxController {
       // Check if the maximum number of cases have been selected
       if (selectedCases.length == maxCasesPerRound.value) {
         // Check if it is the last round
-        playRingSound();
-        Completer<void> completer = Completer<void>();
+        int emptyCount = priceImagesDynamic.where((item) => item == "").length;
+        if (emptyCount <= 20) {
+          playRingSound();
+          Completer<void> completer = Completer<void>();
 
-        _showPhoneCall(completer);
-        await completer.future;
-        Get.back();
-        _showBankerOffer();
+          _showPhoneCall(completer);
+          await completer.future;
+          Get.back();
+          _showBankerOffer();
+        } else if (emptyCount == 24) {
+          showbuttons.value = true;
+          debugPrint("this is value of showbutton:${showbuttons.value}");
+          stopRingSound(); // Stop the ringing sound
+          Get.back();
+          update();
+        } else {
+          stopRingSound(); // Stop the ringing sound
+          Get.back(); // Close the dialog
+          nextRound();
+        }
       }
     }
   }

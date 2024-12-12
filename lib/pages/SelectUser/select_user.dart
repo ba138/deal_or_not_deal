@@ -133,6 +133,7 @@ class _SelectUserState extends State<SelectUser> {
                 ),
                 itemCount: widget.usersName.length,
                 itemBuilder: (context, index) {
+                  widget.usersName.reversed;
                   String caseImage = widget.usersName[index]['caseImage']!;
                   // String userName = widget.usersName[index]['userName']!;
 
