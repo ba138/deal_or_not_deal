@@ -262,6 +262,65 @@ class PriceController extends GetxController {
     );
   }
 
+  void _showConguritaionDialog(int amount) {
+    Get.dialog(Dialog.fullscreen(
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("images/winner.jpg"), fit: BoxFit.cover),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              "You won £$amount",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                revealPlayerCase();
+              },
+              child: Container(
+                height: 56,
+                width: 200,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      AppColors.primaryColor,
+                      AppColors.secondPrimaryColor
+                    ],
+                    begin: Alignment.centerLeft, // Start from the left
+                    end: Alignment.centerRight, // End at the right
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Reveal Box",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 100,
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
+
   void _showBankerOffer() {
     List<int> priceValues = [];
 
@@ -355,7 +414,8 @@ class PriceController extends GetxController {
                       clappingPlayer.dispose();
                       ringPlayer.dispose();
                       Get.back(); // Close the dialog
-                      _endGame();
+                      _showConguritaionDialog(bankerOffer.value);
+                      // _endGame();
                     },
                     child: Container(
                       height: 56,
