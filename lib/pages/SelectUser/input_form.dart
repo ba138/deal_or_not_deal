@@ -21,7 +21,7 @@ class _InputForumState extends State<InputForum> {
     if (_controller.text.isNotEmpty) {
       String playerName = _controller.text.trim();
       if (cases.isNotEmpty) {
-        String assignedCase = cases.removeLast();
+        String assignedCase = cases.removeAt(0);
 
         // Add player to the list
         setState(() {

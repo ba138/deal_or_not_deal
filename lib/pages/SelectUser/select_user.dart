@@ -26,18 +26,15 @@ class _SelectUserState extends State<SelectUser> {
   final AudioPlayer audioPlayer = AudioPlayer();
   late AudioPlayer userSelectionSound;
   late AudioPlayer startingSound;
+
   Future<void> playStartingSound() async {
     startingSound = AudioPlayer();
     await startingSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
     await startingSound.play(DeviceFileSource("audio/starting_sound.mp3"));
-
-    // Stop the sound after 3 seconds
   }
 
   Future<void> stopStartingSoundAndNavigate() async {
     await startingSound.stop();
-
-    // Get.offAll(() => const InputForum());
   }
 
   Future<void> startUserSelectionSound() async {
@@ -51,7 +48,7 @@ class _SelectUserState extends State<SelectUser> {
     await userSelectionSound.stop();
   }
 
-  void startSelectionAnimation() async {
+  Future<void> startSelectionAnimation() async {
     if (animationInProgress.value) return;
     playStartingSound();
     animationInProgress.value = true;
@@ -68,6 +65,10 @@ class _SelectUserState extends State<SelectUser> {
 
     animationInProgress.value = false;
     selectedUser = widget.usersName[finalIndex];
+
+    // Log the selected user for debugging
+    debugPrint("Selected User: ${selectedUser.toString()}");
+
     stopStartingSoundAndNavigate();
     startUserSelectionSound();
 
@@ -104,8 +105,12 @@ class _SelectUserState extends State<SelectUser> {
     // Navigate after dialog dismissal (optional)
     Future.delayed(const Duration(seconds: 5), () {
       stopUserSelectionSound();
-
       Get.back(); // Close the dialog
+
+      // Verify navigation to SplashPage
+      debugPrint(
+          "Navigating to SplashPage with selectedUser: ${selectedUser.toString()}");
+
       Get.offAll(() => SplashPage(uaerscase: selectedUser));
     });
   }
@@ -133,9 +138,7 @@ class _SelectUserState extends State<SelectUser> {
                 ),
                 itemCount: widget.usersName.length,
                 itemBuilder: (context, index) {
-                  widget.usersName.reversed;
                   String caseImage = widget.usersName[index]['caseImage']!;
-                  // String userName = widget.usersName[index]['userName']!;
 
                   return Obx(
                     () => Card(
@@ -161,16 +164,6 @@ class _SelectUserState extends State<SelectUser> {
                               caseImage,
                               fit: BoxFit.contain,
                             ),
-                            // if (highlightedIndex.value == index)
-                            //   Text(
-                            //     userName,
-                            //     style: const TextStyle(
-                            //       fontWeight: FontWeight.bold,
-                            //       fontSize: 16,
-                            //       color: Colors.black,
-                            //     ),
-                            //     textAlign: TextAlign.center,
-                            //   ),
                           ],
                         ),
                       ),
@@ -210,15 +203,6 @@ class _SelectUserState extends State<SelectUser> {
                   ),
                 ),
               ),
-
-              // ElevatedButton(
-              //   onPressed:
-              //      ,
-              //   child: const Text(
-              //     "Choose Player",
-              //     style: TextStyle(fontSize: 18),
-              //   ),
-              // ),
             ),
           ],
         ),
