@@ -1,6 +1,5 @@
 import 'package:deal_or_not_deal/pages/FirstPage/first_page.dart';
-import 'package:deal_or_not_deal/pages/SelectUser/input_form.dart';
-import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
