@@ -118,10 +118,10 @@ class PriceController extends GetxController {
 
         // Compare the value and play the appropriate sound
         if (priceValue > 2988) {
-          await playClappingSound(); // Play clapping sound for higher values
+          drumRollSound();
         } else {
           // await playDifferentSound(); // Play a different sound for lower values
-          drumRollSound();
+          await playClappingSound(); // Play clapping sound for higher values
         }
       } else {
         // Handle the case where no match is found in both lists
@@ -282,6 +282,9 @@ class PriceController extends GetxController {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(
+              height: 40,
+            ),
             InkWell(
               onTap: () {
                 revealPlayerCase();
@@ -390,7 +393,7 @@ class PriceController extends GetxController {
                 ),
                 child: Center(
                   child: Text(
-                    "\$${bankerOffer.value}",
+                    "£${bankerOffer.value}",
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 28,
