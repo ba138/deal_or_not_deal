@@ -25,6 +25,7 @@ class SplashPage extends StatelessWidget {
               selectedUserData: uaerscase,
             ),
           );
+          Get.deleteAll(force: true);
         },
         child: Container(
           height: 56,

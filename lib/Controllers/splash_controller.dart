@@ -17,6 +17,7 @@ class SplashController extends GetxController {
     await startingSound.stop();
 
     Get.offAll(() => const InputForum());
+    Get.deleteAll(force: true);
   }
 
   @override

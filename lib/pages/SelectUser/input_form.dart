@@ -64,6 +64,8 @@ class _InputForumState extends State<InputForum> {
         Future.delayed(const Duration(seconds: 2), () {
           Get.back();
           if (players.length == 26) {
+            Get.deleteAll(force: true);
+
             Get.offAll(() => SelectUser(
                   usersName: players,
                 ));

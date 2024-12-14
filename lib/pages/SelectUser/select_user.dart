@@ -112,6 +112,7 @@ class _SelectUserState extends State<SelectUser> {
           "Navigating to SplashPage with selectedUser: ${selectedUser.toString()}");
 
       Get.offAll(() => SplashPage(uaerscase: selectedUser));
+      Get.deleteAll(force: true);
     });
   }
 

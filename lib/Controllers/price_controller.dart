@@ -263,23 +263,30 @@ class PriceController extends GetxController {
   }
 
   void _showConguritaionDialog(int amount) {
-    Get.dialog(Dialog.fullscreen(
-      child: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("images/winner.jpg"), fit: BoxFit.cover),
-        ),
+    Get.dialog(Dialog(
+      child: SizedBox(
+        height: 300,
+        width: 400,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "You won £$amount",
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 28,
+            const SizedBox(
+              height: 50,
+            ),
+            const Text(
+              "Congurataion",
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 36,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              "You have won $amount",
+              style: const TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 28,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(
@@ -287,6 +294,7 @@ class PriceController extends GetxController {
             ),
             InkWell(
               onTap: () {
+                Get.back();
                 revealPlayerCase();
               },
               child: Container(
@@ -316,7 +324,7 @@ class PriceController extends GetxController {
               ),
             ),
             const SizedBox(
-              height: 100,
+              height: 50,
             ),
           ],
         ),
@@ -393,7 +401,7 @@ class PriceController extends GetxController {
                 ),
                 child: Center(
                   child: Text(
-                    "£${bankerOffer.value}",
+                    "${bankerOffer.value}",
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 28,
@@ -414,8 +422,8 @@ class PriceController extends GetxController {
                       await ringPlayer.stop();
                       ringPlayer.dispose();
                       audioPlayer.dispose();
-                      clappingPlayer.dispose();
-                      ringPlayer.dispose();
+                      // clappingPlayer.dispose();
+                      // ringPlayer.dispose();
                       Get.back(); // Close the dialog
                       _showConguritaionDialog(bankerOffer.value);
                       // _endGame();
@@ -496,36 +504,6 @@ class PriceController extends GetxController {
     );
   }
 
-  // Function to end the game and show the final win amount
-  void _endGame() {
-    Get.dialog(
-      AlertDialog(
-        title: const Text("Game Over"),
-        content: Text("Congratulations! You won \$${bankerOffer.value}."),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Close the dialog
-              Get.back();
-
-              // Update the price lists and notify listeners
-              priceListOneDynamic.refresh(); // Refresh priceListOneDynamic
-              priceListTwoDynamic.refresh(); // Refresh priceListTwoDynamic
-              update(); // Notify GetX controller to update UI
-
-              // Navigate to SplashPage after the dialog closes
-              Future.delayed(const Duration(milliseconds: 300), () {
-                Get.offAll(() => const FirstPage());
-              });
-            },
-            child: const Text("Exit"),
-          ),
-        ],
-      ),
-      barrierDismissible: false, // Prevent dismissal when tapping outside
-    );
-  }
-
   void nextRound() {
     if (round.value < roundImages.length) {
       maxCasesPerRound.value = roundImages.length - round.value.toInt();
@@ -571,31 +549,29 @@ class PriceController extends GetxController {
   }
 
   void getData(String targetCase) {
-    // Reset the lists to their original states (if needed)
-    caseDynamic.value = List.from(cases); // Reset to original case images
-    priceImagesDynamic.value =
-        List.from(priceImages); // Reset to original price images
-
-    // Update dynamic lists from the static ones
+    // Reset the dynamic lists to their original states
+    // priceListOneDynamic.assignAll(priceListOneDynamic);
+    // priceListTwoDynamic.assignAll(priceListTwoDynamic);
     priceListOneDynamic.value = List.from(priceListOne);
     priceListTwoDynamic.value = List.from(priceListTwo);
 
-    // Debugging: Check contents of dynamic lists
-    debugPrint(
-        "this is the length of priceListOneDynamic: ${priceListOneDynamic.length}");
-    debugPrint(
-        "this is the contents of priceListOneDynamic: $priceListOneDynamic");
+    // Reset the caseDynamic list to its original state
+    caseDynamic.value = List.from(cases);
 
-    debugPrint(
-        "this is the length of priceListTwoDynamic: ${priceListTwoDynamic.length}");
-    debugPrint(
-        "this is the contents of priceListTwoDynamic: $priceListTwoDynamic");
+    // Reset price images to their original state
+    priceImagesDynamic.value = List.from(priceImages);
+
+    // Debugging: Log the reset state
+    debugPrint("priceListOneDynamic reset: $priceListOneDynamic");
+    debugPrint("priceListTwoDynamic reset: $priceListTwoDynamic");
+    debugPrint("caseDynamic reset: $caseDynamic");
+    debugPrint("priceImagesDynamic reset: $priceImagesDynamic");
 
     // Shuffle the lists for randomness
     priceImagesDynamic.shuffle();
 
+    // Continue with the rest of your logic
     if (caseDynamic.contains(targetCase)) {
-      // Remove the string and assign it to selectedCaseImage
       userCaseImage.value = targetCase;
       caseDynamic.remove(targetCase);
       debugPrint("Selected case image: $userCaseImage.value");
@@ -604,26 +580,21 @@ class PriceController extends GetxController {
       debugPrint("Target string not found in caseDynamic.");
     }
 
-    // Randomly select a price image and remove it from priceImagesDynamic
+    // Handle price image selection and removal
     if (priceImagesDynamic.isNotEmpty) {
-      // Assign the value to a temporary string variable before removal
       removedPriceImage2.value = priceImagesDynamic.first;
-
-      // Remove the selected price image and update the userCasePriceImage
       userCasePriceImage.value = priceImagesDynamic.removeAt(0);
 
-      // Debugging: Log the removed and updated lists
       debugPrint("Removed price image: $removedPriceImage");
       debugPrint("Selected price image: ${userCasePriceImage.value}");
       debugPrint("Updated priceImagesDynamic: $priceImagesDynamic");
 
-      // Optionally remove the selected price image from other dynamic lists
+      // Remove the selected price image from dynamic lists
       priceListOneDynamic
           .removeWhere((item) => item['image'] == removedPriceImage);
       priceListTwoDynamic
           .removeWhere((item) => item['image'] == removedPriceImage);
 
-      // Debugging: Confirm removal from other lists
       debugPrint(
           "Updated priceListOneDynamic after removal: $priceListOneDynamic");
       debugPrint(
@@ -707,6 +678,56 @@ class PriceController extends GetxController {
       ),
       barrierDismissible: false,
     );
+    Future.delayed(const Duration(seconds: 5), () {
+      // Assign static lists to dynamic lists
+      priceListOneDynamic.assignAll(priceListOne);
+      priceListTwoDynamic.assignAll(priceListTwo);
+
+      // Update empty image values in priceListOneDynamic
+      for (int i = 0; i < priceListOneDynamic.length; i++) {
+        if (priceListOneDynamic[i]['image'] == '') {
+          // Find corresponding static item by priceId
+          var staticItem = priceListOne.firstWhere(
+            (item) => item['priceId'] == priceListOneDynamic[i]['priceId'],
+            orElse: () =>
+                <String, dynamic>{}, // Provide an empty map if not found
+          );
+
+          if (staticItem.isNotEmpty) {
+            priceListOneDynamic[i] = {
+              ...priceListOneDynamic[i],
+              'image': staticItem['image'], // Update the image value
+            };
+          }
+        }
+      }
+
+      // Update empty image values in priceListTwoDynamic
+      for (int i = 0; i < priceListTwoDynamic.length; i++) {
+        if (priceListTwoDynamic[i]['image'] == '') {
+          // Find corresponding static item by priceId
+          var staticItem = priceListTwo.firstWhere(
+            (item) => item['priceId'] == priceListTwoDynamic[i]['priceId'],
+            orElse: () =>
+                <String, dynamic>{}, // Provide an empty map if not found
+          );
+
+          if (staticItem.isNotEmpty) {
+            priceListTwoDynamic[i] = {
+              ...priceListTwoDynamic[i],
+              'image': staticItem['image'], // Update the image value
+            };
+          }
+        }
+      }
+
+      // Debug to verify updates
+      debugPrint("Updated List One: $priceListOneDynamic");
+      debugPrint("Updated List Two: $priceListTwoDynamic");
+
+      // Navigate to the FirstPage
+      Get.offAll(() => const FirstPage());
+    });
   }
 
   @override
