@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:deal_or_not_deal/Controllers/price_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,8 +7,8 @@ import 'package:deal_or_not_deal/pages/MainPage/main_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 
 class SplashPage extends StatelessWidget {
-  Map<String, dynamic> uaerscase;
-  SplashPage({
+  final Map<String, dynamic> uaerscase;
+  const SplashPage({
     super.key,
     required this.uaerscase,
   });
@@ -18,6 +19,8 @@ class SplashPage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () {
+          Get.deleteAll(force: true);
+
           Get.offAll(
             () =>
                 // Reset Game State
@@ -25,7 +28,6 @@ class SplashPage extends StatelessWidget {
               selectedUserData: uaerscase,
             ),
           );
-          Get.deleteAll(force: true);
         },
         child: Container(
           height: 56,

@@ -7,8 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:math';
+import 'package:flutter_soloud/flutter_soloud.dart';
 
 class PriceController extends GetxController {
+  RxList<dynamic> priceListOneDynamic;
+  RxList<dynamic> priceListTwoDynamic;
+  String targetCase;
+  PriceController({
+    required this.priceListOneDynamic,
+    required this.priceListTwoDynamic,
+    required this.targetCase,
+  });
+  late SoLoud soloud;
+  late SoundHandle soundHandle;
+  late AudioSource source;
   final AudioPlayer audioPlayer = AudioPlayer();
   late AudioPlayer clappingPlayer; // Separate player for clapping sound
   late AudioPlayer ringPlayer; // Separate player for ringing sound
@@ -19,8 +31,7 @@ class PriceController extends GetxController {
   // Reactive lists to manage the case and price images
   var caseDynamic = <String>[].obs;
   var priceImagesDynamic = <String>[].obs;
-  RxList<Map<String, dynamic>> priceListOneDynamic = RxList([]);
-  RxList<Map<String, dynamic>> priceListTwoDynamic = RxList([]);
+
   RxString userCaseImage = "".obs;
   RxString userCasePriceImage = "".obs;
   var tappedCases = List.generate(26, (index) => false).obs;
@@ -41,24 +52,58 @@ class PriceController extends GetxController {
   ].obs;
 
   Future<void> playClappingSound() async {
-    clappingPlayer = AudioPlayer();
-    await clappingPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await clappingPlayer.play(DeviceFileSource("audio/claping.mp3"));
+    try {
+      // Initialize the audio engine
+      soloud = SoLoud.instance;
+      await soloud.init();
 
-    // Stop the sound after 3 seconds
-    Future.delayed(const Duration(seconds: 4), () async {
-      await clappingPlayer.stop();
-    });
+      // Load the audio asset and play with looping
+      source = await soloud.loadAsset('audio/claping.mp3');
+      soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+      Future.delayed(const Duration(seconds: 3), () async {
+        await soloud.stop(soundHandle);
+
+        // Deinitialize the audio engine
+        await soloud.disposeSource(source);
+      });
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
+    // clappingPlayer = AudioPlayer();
+    // await clappingPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    // await clappingPlayer.play(DeviceFileSource("audio/claping.mp3"));
+
+    // // Stop the sound after 3 seconds
+    // Future.delayed(const Duration(seconds: 3), () async {
+    //   await clappingPlayer.stop();
+    // });
   }
 
   Future<void> drumRollSound() async {
-    dumroll = AudioPlayer();
-    await dumroll.play(DeviceFileSource("audio/drum_roll.mp3"));
+    try {
+      // Initialize the audio engine
+      soloud = SoLoud.instance;
+      await soloud.init();
 
-    // Stop the sound after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () async {
-      await dumroll.stop();
-    });
+      // Load the audio asset and play with looping
+      source = await soloud.loadAsset('audio/drum_roll.mp3');
+      soundHandle = await soloud.play(source, looping: false, volume: 1.0);
+      Future.delayed(const Duration(seconds: 3), () async {
+        await soloud.stop(soundHandle);
+
+        // Deinitialize the audio engine
+        await soloud.disposeSource(source);
+      });
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
+    // dumroll = AudioPlayer();
+    // await dumroll.play(DeviceFileSource("audio/drum_roll.mp3"));
+
+    // // Stop the sound after 3 seconds
+    // Future.delayed(const Duration(seconds: 3), () async {
+    //   await dumroll.stop();
+    // });
   }
 
   Future<void> stopClappingSound() async {
@@ -66,13 +111,28 @@ class PriceController extends GetxController {
   }
 
   Future<void> playRingSound() async {
+    try {
+      // Initialize the audio engine
+      soloud = SoLoud.instance;
+      await soloud.init();
+
+      // Load the audio asset and play with looping
+      source = await soloud.loadAsset('audio/phone Ring.mp3');
+      soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
     ringPlayer = AudioPlayer();
     await ringPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
     await ringPlayer.play(DeviceFileSource("audio/phone Ring.mp3"));
   }
 
   Future<void> stopRingSound() async {
-    await ringPlayer.stop();
+    await soloud.stop(soundHandle);
+
+    // Deinitialize the audio engine
+    await soloud.disposeSource(source);
+    // await ringPlayer.stop();
   }
 
   Future<void> stopAllSounds() async {
@@ -95,7 +155,7 @@ class PriceController extends GetxController {
       Map<String, dynamic>? matchedItem;
 
 // First, check in priceListOne
-      matchedItem = priceListOne.firstWhere(
+      matchedItem = checkOne.firstWhere(
         (item) => item['image'] == revealedImage,
         orElse: () =>
             <String, dynamic>{}, // Return an empty map instead of null
@@ -103,7 +163,7 @@ class PriceController extends GetxController {
 
 // If no match is found in priceListOne, check in priceListTwo
       if (matchedItem.isEmpty) {
-        matchedItem = priceListTwo.firstWhere(
+        matchedItem = checkTwo.firstWhere(
           (item) => item['image'] == revealedImage,
           orElse: () =>
               <String, dynamic>{}, // Return an empty map instead of null
@@ -226,8 +286,8 @@ class PriceController extends GetxController {
                 ),
                 InkWell(
                   onTap: () {
-                    stopRingSound();
                     completer.complete();
+                    stopRingSound();
                   },
                   child: Container(
                     height: 56,
@@ -419,7 +479,6 @@ class PriceController extends GetxController {
                 children: [
                   InkWell(
                     onTap: () async {
-                      await ringPlayer.stop();
                       ringPlayer.dispose();
                       audioPlayer.dispose();
                       // clappingPlayer.dispose();
@@ -548,24 +607,12 @@ class PriceController extends GetxController {
     }
   }
 
-  void getData(String targetCase) {
-    // Reset the dynamic lists to their original states
-    // priceListOneDynamic.assignAll(priceListOneDynamic);
-    // priceListTwoDynamic.assignAll(priceListTwoDynamic);
-    priceListOneDynamic.value = List.from(priceListOne);
-    priceListTwoDynamic.value = List.from(priceListTwo);
-
+  void getData() {
     // Reset the caseDynamic list to its original state
     caseDynamic.value = List.from(cases);
 
     // Reset price images to their original state
     priceImagesDynamic.value = List.from(priceImages);
-
-    // Debugging: Log the reset state
-    debugPrint("priceListOneDynamic reset: $priceListOneDynamic");
-    debugPrint("priceListTwoDynamic reset: $priceListTwoDynamic");
-    debugPrint("caseDynamic reset: $caseDynamic");
-    debugPrint("priceImagesDynamic reset: $priceImagesDynamic");
 
     // Shuffle the lists for randomness
     priceImagesDynamic.shuffle();
@@ -574,8 +621,6 @@ class PriceController extends GetxController {
     if (caseDynamic.contains(targetCase)) {
       userCaseImage.value = targetCase;
       caseDynamic.remove(targetCase);
-      debugPrint("Selected case image: $userCaseImage.value");
-      debugPrint("Updated caseDynamic: $caseDynamic");
     } else {
       debugPrint("Target string not found in caseDynamic.");
     }
@@ -584,25 +629,34 @@ class PriceController extends GetxController {
     if (priceImagesDynamic.isNotEmpty) {
       removedPriceImage2.value = priceImagesDynamic.first;
       userCasePriceImage.value = priceImagesDynamic.removeAt(0);
-
-      debugPrint("Removed price image: $removedPriceImage");
-      debugPrint("Selected price image: ${userCasePriceImage.value}");
-      debugPrint("Updated priceImagesDynamic: $priceImagesDynamic");
-
-      // Remove the selected price image from dynamic lists
-      priceListOneDynamic
-          .removeWhere((item) => item['image'] == removedPriceImage);
-      priceListTwoDynamic
-          .removeWhere((item) => item['image'] == removedPriceImage);
-
-      debugPrint(
-          "Updated priceListOneDynamic after removal: $priceListOneDynamic");
-      debugPrint(
-          "Updated priceListTwoDynamic after removal: $priceListTwoDynamic");
     } else {
       debugPrint("Price images list is empty.");
     }
+
+    // Call the updateDynamicLists method to refresh price lists
+//  priceListOneDynamic
+//       ..clear()
+//       ..addAll(priceListOne);
+
+    // Debug to confirm the operation
+    debugPrint("priceListOneDynamic after refresh: $priceListOneDynamic");
+
+    // Clear and refresh priceListTwoDynamic
+    // priceListTwoDynamic
+    //   ..clear()
+    //   ..addAll(priceListTwo);
+
+    // Debug to confirm the operation
+    debugPrint("priceListTwoDynamic after refresh: $priceListTwoDynamic");
   }
+
+  // void updateDynamicLists() {
+  //   // Clear and refresh priceListOneDynamic
+
+  //   // Debugging additional state if needed
+  //   debugPrint("Static priceListOne: $priceListOne");
+  //   debugPrint("Static priceListTwo: $priceListTwo");
+  // }
 
   Future<void> revealPlayerCase() async {
     Map<String, dynamic>? matchedItem;
@@ -680,54 +734,60 @@ class PriceController extends GetxController {
     );
     Future.delayed(const Duration(seconds: 5), () {
       // Assign static lists to dynamic lists
-      priceListOneDynamic.assignAll(priceListOne);
-      priceListTwoDynamic.assignAll(priceListTwo);
+      // priceListOneDynamic.assignAll(priceListOne);
+      // priceListTwoDynamic.assignAll(priceListTwo);
 
-      // Update empty image values in priceListOneDynamic
-      for (int i = 0; i < priceListOneDynamic.length; i++) {
-        if (priceListOneDynamic[i]['image'] == '') {
-          // Find corresponding static item by priceId
-          var staticItem = priceListOne.firstWhere(
-            (item) => item['priceId'] == priceListOneDynamic[i]['priceId'],
-            orElse: () =>
-                <String, dynamic>{}, // Provide an empty map if not found
-          );
+      // // Update empty image values in priceListOneDynamic
+      // for (int i = 0; i < priceListOneDynamic.length; i++) {
+      //   if (priceListOneDynamic[i]['image'] == '') {
+      //     // Find corresponding static item by priceId
+      //     var staticItem = priceListOne.firstWhere(
+      //       (item) => item['priceId'] == priceListOneDynamic[i]['priceId'],
+      //       orElse: () =>
+      //           <String, dynamic>{}, // Provide an empty map if not found
+      //     );
 
-          if (staticItem.isNotEmpty) {
-            priceListOneDynamic[i] = {
-              ...priceListOneDynamic[i],
-              'image': staticItem['image'], // Update the image value
-            };
-          }
-        }
-      }
+      //     if (staticItem.isNotEmpty) {
+      //       priceListOneDynamic[i] = {
+      //         ...priceListOneDynamic[i],
+      //         'image': staticItem['image'], // Update the image value
+      //       };
+      //     }
+      //   }
+      // }
 
       // Update empty image values in priceListTwoDynamic
-      for (int i = 0; i < priceListTwoDynamic.length; i++) {
-        if (priceListTwoDynamic[i]['image'] == '') {
-          // Find corresponding static item by priceId
-          var staticItem = priceListTwo.firstWhere(
-            (item) => item['priceId'] == priceListTwoDynamic[i]['priceId'],
-            orElse: () =>
-                <String, dynamic>{}, // Provide an empty map if not found
-          );
+      // for (int i = 0; i < priceListTwoDynamic.length; i++) {
+      //   if (priceListTwoDynamic[i]['image'] == '') {
+      //     // Find corresponding static item by priceId
+      //     var staticItem = priceListTwo.firstWhere(
+      //       (item) => item['priceId'] == priceListTwoDynamic[i]['priceId'],
+      //       orElse: () =>
+      //           <String, dynamic>{}, // Provide an empty map if not found
+      //     );
 
-          if (staticItem.isNotEmpty) {
-            priceListTwoDynamic[i] = {
-              ...priceListTwoDynamic[i],
-              'image': staticItem['image'], // Update the image value
-            };
-          }
-        }
-      }
+      //     if (staticItem.isNotEmpty) {
+      //       priceListTwoDynamic[i] = {
+      //         ...priceListTwoDynamic[i],
+      //         'image': staticItem['image'], // Update the image value
+      //       };
+      //     }
+      //   }
+      // }
 
-      // Debug to verify updates
-      debugPrint("Updated List One: $priceListOneDynamic");
-      debugPrint("Updated List Two: $priceListTwoDynamic");
+      // // Debug to verify updates
+      // debugPrint("Updated List One: $priceListOneDynamic");
+      // debugPrint("Updated List Two: $priceListTwoDynamic");
 
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
     });
+  }
+
+  @override
+  void onInit() {
+    getData();
+    super.onInit();
   }
 
   @override

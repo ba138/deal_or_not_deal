@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:get/get.dart';
 import 'dart:math';
 
@@ -18,6 +19,9 @@ class SelectUser extends StatefulWidget {
 }
 
 class _SelectUserState extends State<SelectUser> {
+  late SoLoud soloud;
+  late SoundHandle soundHandle;
+  late AudioSource source;
   final RxInt highlightedIndex =
       (-1).obs; // Current highlighted box during animation
   final RxBool animationInProgress = false.obs; // Tracks animation state
@@ -28,24 +32,46 @@ class _SelectUserState extends State<SelectUser> {
   late AudioPlayer startingSound;
 
   Future<void> playStartingSound() async {
-    startingSound = AudioPlayer();
-    await startingSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await startingSound.play(DeviceFileSource("audio/starting_sound.mp3"));
+    // Initialize the audio engine
+    soloud = SoLoud.instance;
+    await soloud.init();
+
+    // Load the audio asset and play with looping
+    source = await soloud.loadAsset('audio/starting_sound.mp3');
+    soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+    // startingSound = AudioPlayer();
+    // await startingSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    // await startingSound.play(DeviceFileSource("audio/starting_sound.mp3"));
   }
 
   Future<void> stopStartingSoundAndNavigate() async {
-    await startingSound.stop();
+    // Stop the playback
+    await soloud.stop(soundHandle);
+
+    // Deinitialize the audio engine
+    await soloud.disposeSource(source);
   }
 
   Future<void> startUserSelectionSound() async {
-    userSelectionSound = AudioPlayer();
-    await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await userSelectionSound
-        .play(DeviceFileSource("audio/player_selection_sound.mp3"));
+    // userSelectionSound = AudioPlayer();
+    // await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    // await userSelectionSound
+    //     .play(DeviceFileSource("audio/player_selection_sound.mp3"));
+    // Initialize the audio engine
+    soloud = SoLoud.instance;
+    await soloud.init();
+
+    // Load the audio asset and play with looping
+    source = await soloud.loadAsset('audio/player_selection_sound.mp3');
+    soundHandle = await soloud.play(source, looping: true, volume: 1.0);
   }
 
   Future<void> stopUserSelectionSound() async {
-    await userSelectionSound.stop();
+    // Stop the playback
+    await soloud.stop(soundHandle);
+
+    // Deinitialize the audio engine
+    await soloud.disposeSource(source);
   }
 
   Future<void> startSelectionAnimation() async {

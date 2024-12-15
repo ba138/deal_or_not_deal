@@ -38,6 +38,10 @@ dependencies:
   get: ^4.6.6
   window_manager: ^0.4.3
   audioplayers: ^6.1.0
+  flame_audio: ^2.10.6
+  just_audio: ^0.9.42
+  flutter_soloud: ^2.1.7
+  # just_audio: ^0.9.42
 
 dev_dependencies:
   flutter_test:

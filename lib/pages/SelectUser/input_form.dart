@@ -1,4 +1,5 @@
 import 'package:deal_or_not_deal/pages/SelectUser/select_user.dart';
+import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,6 +117,13 @@ class _InputForumState extends State<InputForum> {
                           const SizedBox(height: 60),
                           InkWell(
                             onTap: addPlayer,
+                            // onTap: () {
+                            //   Get.offAll(() => SplashPage(uaerscase: const {
+                            //         'userName': "Basit Ali",
+                            //         'caseImage':
+                            //             "images/Flying Jets - 5,000.png"
+                            //       }));
+                            // },
                             child: Container(
                               height: 56,
                               width: 120,
