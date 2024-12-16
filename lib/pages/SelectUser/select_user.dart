@@ -49,6 +49,10 @@ class _SelectUserState extends State<SelectUser> {
   }
 
   Future<void> startUserSelectionSound() async {
+    // userSelectionSound = AudioPlayer();
+    // await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    // await userSelectionSound
+    //     .play(DeviceFileSource("audio/player_selection_sound.mp3"));
     // Initialize the audio engine
     soloud = SoLoud.instance;
     await soloud.init();
