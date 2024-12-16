@@ -122,9 +122,9 @@ class PriceController extends GetxController {
     } catch (e) {
       print("Error initializing or playing audio: $e");
     }
-    ringPlayer = AudioPlayer();
-    await ringPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    await ringPlayer.play(DeviceFileSource("audio/phone Ring.mp3"));
+    // ringPlayer = AudioPlayer();
+    // await ringPlayer.setReleaseMode(ReleaseMode.loop); // Loop the sound
+    // await ringPlayer.play(DeviceFileSource("audio/phone Ring.mp3"));
   }
 
   Future<void> stopRingSound() async {
