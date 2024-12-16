@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +26,6 @@ class _SelectUserState extends State<SelectUser> {
   final RxBool animationInProgress = false.obs; // Tracks animation state
   final Random random = Random();
   Map<String, dynamic> selectedUser = {}; // Holds the final selected user data
-  final AudioPlayer audioPlayer = AudioPlayer();
-  late AudioPlayer userSelectionSound;
-  late AudioPlayer startingSound;
 
   Future<void> playStartingSound() async {
     // Initialize the audio engine
@@ -53,10 +49,6 @@ class _SelectUserState extends State<SelectUser> {
   }
 
   Future<void> startUserSelectionSound() async {
-    // userSelectionSound = AudioPlayer();
-    // await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    // await userSelectionSound
-    //     .play(DeviceFileSource("audio/player_selection_sound.mp3"));
     // Initialize the audio engine
     soloud = SoLoud.instance;
     await soloud.init();
@@ -140,12 +132,6 @@ class _SelectUserState extends State<SelectUser> {
       Get.offAll(() => SplashPage(uaerscase: selectedUser));
       Get.deleteAll(force: true);
     });
-  }
-
-  @override
-  void dispose() {
-    userSelectionSound.dispose();
-    super.dispose();
   }
 
   @override
