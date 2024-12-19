@@ -212,7 +212,7 @@ class _MainPageState extends State<MainPage> {
       PriceController(
         priceListOneDynamic: selectedListOne.obs,
         priceListTwoDynamic: selectedListTwo.obs,
-        targetCase: "images/Case 10.png",
+        targetCase: widget.selectedUserData['caseImage'],
       ),
     );
 

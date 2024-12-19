@@ -14,11 +14,11 @@ void main() async {
 
   // Set window options
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(800, 600), // Set a fixed size for the window
+    size: Size(1400, 700), // Set a fixed size for the window
     center: true, // Center the window on the screen
     backgroundColor: Colors.transparent,
     title: 'DEAL OR NOT DEAL',
-    fullScreen: true,
+    fullScreen: false,
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
