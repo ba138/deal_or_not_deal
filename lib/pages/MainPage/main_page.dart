@@ -378,9 +378,9 @@ class _MainPageState extends State<MainPage> {
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
-                                    crossAxisSpacing: 10,
+                                    crossAxisSpacing: 0,
                                     mainAxisSpacing: 8.0,
-                                    childAspectRatio: 2.2,
+                                    childAspectRatio: 2.1,
                                   ),
                                   itemCount: priceController.caseDynamic.length,
                                   itemBuilder: (context, index) {
@@ -392,7 +392,7 @@ class _MainPageState extends State<MainPage> {
                                           priceController.onCaseTapped(index),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 16.0, right: 16),
+                                            left: 24.0, right: 24),
                                         child: Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -428,7 +428,9 @@ class _MainPageState extends State<MainPage> {
                                   ? Image.asset(
                                       priceController.roundImages[
                                           priceController.round.value - 1],
-                                      height: 70,
+                                      height:
+                                          MediaQuery.sizeOf(context).height /
+                                              12,
                                       width: MediaQuery.sizeOf(context).width,
                                       fit: BoxFit.contain,
                                     )
