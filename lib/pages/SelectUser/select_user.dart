@@ -118,19 +118,20 @@ class _SelectUserState extends State<SelectUser> {
 
   @override
   Widget build(BuildContext context) {
+    widget.usersName.sort((a, b) => a['count'].compareTo(b['count']));
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(40.0),
         child: Column(
           children: [
-            Expanded(
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height / 1.35,
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 20.0,
-                  childAspectRatio: 1.5,
-                ),
+                    crossAxisCount: 7,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20.0,
+                    childAspectRatio: 1.56),
                 itemCount: widget.usersName.length,
                 itemBuilder: (context, index) {
                   String caseImage = widget.usersName[index]['caseImage']!;

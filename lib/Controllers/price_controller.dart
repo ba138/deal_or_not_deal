@@ -114,50 +114,37 @@ class PriceController extends GetxController {
       tappedCases[index] = true;
       selectedCases.add(index);
 
-      // Reveal the case and price image
+      // Reveal case and check for matching items
       revealedCases.add(index);
-
       String revealedImage = priceImagesDynamic[index];
 
-      // Initialize matchedItem to null
-      Map<String, dynamic>? matchedItem;
-
-// First, check in priceListOne
-      matchedItem = checkOne.firstWhere(
+      // Find matching item
+      Map<String, dynamic>? matchedItem = checkOne.firstWhere(
         (item) => item['image'] == revealedImage,
-        orElse: () =>
-            <String, dynamic>{}, // Return an empty map instead of null
+        orElse: () => <String, dynamic>{},
       );
 
-// If no match is found in priceListOne, check in priceListTwo
       if (matchedItem.isEmpty) {
         matchedItem = checkTwo.firstWhere(
           (item) => item['image'] == revealedImage,
-          orElse: () =>
-              <String, dynamic>{}, // Return an empty map instead of null
+          orElse: () => <String, dynamic>{},
         );
       }
 
-// Ensure a match is found in one of the lists
       if (matchedItem.isNotEmpty) {
-        // Parse the priceValue and remove any commas
         int priceValue =
             int.parse(matchedItem['priceValue'].replaceAll(",", ""));
-
-        // Compare the value and play the appropriate sound
         if (priceValue > 2988) {
           drumRollSound();
         } else {
-          // await playDifferentSound(); // Play a different sound for lower values
-          await playClappingSound(); // Play clapping sound for higher values
+          await playClappingSound();
         }
       } else {
-        // Handle the case where no match is found in both lists
         debugPrint('No matching item found for image: $revealedImage');
       }
 
-      Completer<void> completer = Completer<void>();
-
+      // Show case opening dialog
+      Completer<void> dialogCompleter = Completer<void>();
       Get.dialog(
         Dialog(
           backgroundColor: Colors.transparent,
@@ -167,16 +154,12 @@ class PriceController extends GetxController {
             decoration: const BoxDecoration(
               image: DecorationImage(image: AssetImage("images/caseopen.png")),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  revealedImage,
-                  height: 400,
-                  width: 400,
-                ),
-              ],
+            child: Center(
+              child: Image.asset(
+                revealedImage,
+                height: 400,
+                width: 400,
+              ),
             ),
           ),
         ),
@@ -184,55 +167,62 @@ class PriceController extends GetxController {
       );
 
       Future.delayed(const Duration(seconds: 3), () {
-        completer.complete();
-        Get.back();
+        dialogCompleter.complete();
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
       });
 
-      // Wait for user confirmation
-      await completer.future;
+      await dialogCompleter.future;
 
-      // Mark the case as used instead of removing it
-      priceImagesDynamic[index] = ""; // Clear the image to indicate it's used
-      caseDynamic[index] = ""; // Clear the case
+      // Mark case as used
+      priceImagesDynamic[index] = "";
+      caseDynamic[index] = "";
 
-      // Update the image value to an empty string in dynamic lists
+      // Update dynamic lists
       for (var item in priceListOneDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = ""; // Update the image
-          priceListOneDynamic.refresh(); // Notify UI
+          item['image'] = "";
+          priceListOneDynamic.refresh();
           break;
         }
       }
 
       for (var item in priceListTwoDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = ""; // Update the image
-          priceListTwoDynamic.refresh(); // Notify UI
+          item['image'] = "";
+          priceListTwoDynamic.refresh();
           break;
         }
       }
 
-      // Check if the maximum number of cases have been selected
+      // Check if maximum cases are selected
       if (selectedCases.length == maxCasesPerRound.value) {
-        // Check if it is the last round
-        int emptyCount = priceImagesDynamic.where((item) => item == "").length;
-        if (emptyCount <= 20) {
-          Completer<void> completer = Completer<void>();
-          playRingSound();
+        int emptyCount =
+            priceImagesDynamic.where((item) => item.isEmpty).length;
 
-          _showPhoneCall(completer);
-          await completer.future;
-          Get.back();
+        if (emptyCount <= 20) {
+          Completer<void> phoneCallCompleter = Completer<void>();
+          playRingSound();
+          _showPhoneCall(phoneCallCompleter);
+          await phoneCallCompleter.future;
+          if (Get.isDialogOpen ?? false) {
+            Get.back();
+          }
           _showBankerOffer();
         } else if (emptyCount == 24) {
           showbuttons.value = true;
-          debugPrint("this is value of showbutton:${showbuttons.value}");
-          stopRingSound(); // Stop the ringing sound
-          Get.back();
+          debugPrint("Show buttons value: ${showbuttons.value}");
+          stopRingSound();
+          if (Get.isDialogOpen ?? false) {
+            Get.back();
+          }
           update();
         } else {
-          stopRingSound(); // Stop the ringing sound
-          Get.back(); // Close the dialog
+          stopRingSound();
+          if (Get.isDialogOpen ?? false) {
+            Get.back();
+          }
           nextRound();
         }
       }

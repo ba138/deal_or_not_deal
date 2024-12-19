@@ -12,7 +12,7 @@ class InputForum extends StatefulWidget {
 
 class _InputForumState extends State<InputForum> {
   final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> players =
+  final List<Map<String, dynamic>> players =
       []; // List to store user and case info
   List<String> cases = List.generate(
       26, (index) => "images/Case ${index + 1}.png"); // Global case images list
@@ -23,10 +23,14 @@ class _InputForumState extends State<InputForum> {
       if (cases.isNotEmpty) {
         cases.shuffle();
         String assignedCase = cases.removeAt(0);
-
+        int i = 1;
         // Add player to the list
         setState(() {
-          players.add({'userName': playerName, 'caseImage': assignedCase});
+          players.add({
+            'userName': playerName,
+            'caseImage': assignedCase,
+            'count': i++
+          });
         });
 
         // Show pop-up with assigned case

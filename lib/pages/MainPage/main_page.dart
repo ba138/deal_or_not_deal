@@ -375,9 +375,10 @@ class _MainPageState extends State<MainPage> {
                                 return GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 7,
-                                    crossAxisSpacing: 8.0,
+                                    crossAxisCount: 5,
+                                    crossAxisSpacing: 10,
                                     mainAxisSpacing: 8.0,
+                                    childAspectRatio: 2.2,
                                   ),
                                   itemCount: priceController.caseDynamic.length,
                                   itemBuilder: (context, index) {
@@ -387,26 +388,32 @@ class _MainPageState extends State<MainPage> {
                                     return GestureDetector(
                                       onTap: () =>
                                           priceController.onCaseTapped(index),
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        elevation: 4,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors
-                                                  .white, // Highlight tapped case
-                                              width: 2,
-                                            ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16.0, right: 16),
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: caseImage.isNotEmpty
-                                              ? Image.asset(caseImage,
-                                                  fit: BoxFit.contain)
-                                              : const SizedBox.shrink(),
+                                          elevation: 4,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors
+                                                    .white, // Highlight tapped case
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: caseImage.isNotEmpty
+                                                ? Image.asset(
+                                                    caseImage,
+                                                    fit: BoxFit.contain,
+                                                  )
+                                                : const SizedBox.shrink(),
+                                          ),
                                         ),
                                       ),
                                     );
