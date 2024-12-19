@@ -117,12 +117,6 @@ class _SelectUserState extends State<SelectUser> {
   }
 
   @override
-  void initState() {
-    widget.usersName.sort((a, b) => a['count'].compareTo(b['count']));
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -140,6 +134,8 @@ class _SelectUserState extends State<SelectUser> {
                 itemCount: widget.usersName.length,
                 itemBuilder: (context, index) {
                   String caseImage = widget.usersName[index]['caseImage']!;
+                  widget.usersName
+                      .sort((a, b) => a['count'].compareTo(b['count']));
 
                   return Obx(
                     () => Card(

@@ -114,37 +114,50 @@ class PriceController extends GetxController {
       tappedCases[index] = true;
       selectedCases.add(index);
 
-      // Reveal case and check for matching items
+      // Reveal the case and price image
       revealedCases.add(index);
+
       String revealedImage = priceImagesDynamic[index];
 
-      // Find matching item
-      Map<String, dynamic>? matchedItem = checkOne.firstWhere(
+      // Initialize matchedItem to null
+      Map<String, dynamic>? matchedItem;
+
+// First, check in priceListOne
+      matchedItem = checkOne.firstWhere(
         (item) => item['image'] == revealedImage,
-        orElse: () => <String, dynamic>{},
+        orElse: () =>
+            <String, dynamic>{}, // Return an empty map instead of null
       );
 
+// If no match is found in priceListOne, check in priceListTwo
       if (matchedItem.isEmpty) {
         matchedItem = checkTwo.firstWhere(
           (item) => item['image'] == revealedImage,
-          orElse: () => <String, dynamic>{},
+          orElse: () =>
+              <String, dynamic>{}, // Return an empty map instead of null
         );
       }
 
+// Ensure a match is found in one of the lists
       if (matchedItem.isNotEmpty) {
+        // Parse the priceValue and remove any commas
         int priceValue =
             int.parse(matchedItem['priceValue'].replaceAll(",", ""));
+
+        // Compare the value and play the appropriate sound
         if (priceValue > 2988) {
           drumRollSound();
         } else {
-          await playClappingSound();
+          // await playDifferentSound(); // Play a different sound for lower values
+          await playClappingSound(); // Play clapping sound for higher values
         }
       } else {
+        // Handle the case where no match is found in both lists
         debugPrint('No matching item found for image: $revealedImage');
       }
 
-      // Show case opening dialog
-      Completer<void> dialogCompleter = Completer<void>();
+      Completer<void> completer = Completer<void>();
+
       Get.dialog(
         Dialog(
           backgroundColor: Colors.transparent,
@@ -154,12 +167,16 @@ class PriceController extends GetxController {
             decoration: const BoxDecoration(
               image: DecorationImage(image: AssetImage("images/caseopen.png")),
             ),
-            child: Center(
-              child: Image.asset(
-                revealedImage,
-                height: 400,
-                width: 400,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  revealedImage,
+                  height: 400,
+                  width: 400,
+                ),
+              ],
             ),
           ),
         ),
@@ -167,62 +184,55 @@ class PriceController extends GetxController {
       );
 
       Future.delayed(const Duration(seconds: 3), () {
-        dialogCompleter.complete();
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
+        completer.complete();
+        Get.back();
       });
 
-      await dialogCompleter.future;
+      // Wait for user confirmation
+      await completer.future;
 
-      // Mark case as used
-      priceImagesDynamic[index] = "";
-      caseDynamic[index] = "";
+      // Mark the case as used instead of removing it
+      priceImagesDynamic[index] = ""; // Clear the image to indicate it's used
+      caseDynamic[index] = ""; // Clear the case
 
-      // Update dynamic lists
+      // Update the image value to an empty string in dynamic lists
       for (var item in priceListOneDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = "";
-          priceListOneDynamic.refresh();
+          item['image'] = ""; // Update the image
+          priceListOneDynamic.refresh(); // Notify UI
           break;
         }
       }
 
       for (var item in priceListTwoDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = "";
-          priceListTwoDynamic.refresh();
+          item['image'] = ""; // Update the image
+          priceListTwoDynamic.refresh(); // Notify UI
           break;
         }
       }
 
-      // Check if maximum cases are selected
+      // Check if the maximum number of cases have been selected
       if (selectedCases.length == maxCasesPerRound.value) {
-        int emptyCount =
-            priceImagesDynamic.where((item) => item.isEmpty).length;
-
+        // Check if it is the last round
+        int emptyCount = priceImagesDynamic.where((item) => item == "").length;
         if (emptyCount <= 20) {
-          Completer<void> phoneCallCompleter = Completer<void>();
+          Completer<void> completer = Completer<void>();
           playRingSound();
-          _showPhoneCall(phoneCallCompleter);
-          await phoneCallCompleter.future;
-          if (Get.isDialogOpen ?? false) {
-            Get.back();
-          }
+
+          _showPhoneCall(completer);
+          await completer.future;
+          Get.back();
           _showBankerOffer();
         } else if (emptyCount == 24) {
           showbuttons.value = true;
-          debugPrint("Show buttons value: ${showbuttons.value}");
-          stopRingSound();
-          if (Get.isDialogOpen ?? false) {
-            Get.back();
-          }
+          debugPrint("this is value of showbutton:${showbuttons.value}");
+          stopRingSound(); // Stop the ringing sound
+          Get.back();
           update();
         } else {
-          stopRingSound();
-          if (Get.isDialogOpen ?? false) {
-            Get.back();
-          }
+          stopRingSound(); // Stop the ringing sound
+          Get.back(); // Close the dialog
           nextRound();
         }
       }
@@ -353,6 +363,7 @@ class PriceController extends GetxController {
   void _showBankerOffer() {
     List<int> priceValues = [];
 
+    // Collect all remaining case values
     for (var item in priceListOneDynamic) {
       if (item['image'] != "") {
         priceValues.add(int.parse(item['priceValue'].replaceAll(",", "")));
@@ -365,25 +376,31 @@ class PriceController extends GetxController {
       }
     }
 
-    // Calculate RMS value
-    if (priceValues.isNotEmpty) {
-      double rms = sqrt(priceValues
-                  .map((value) => value * value) // Square each value
-                  .reduce((a, b) => a + b) / // Sum all squared values
-              priceValues.length // Divide by the number of values
-          ); // Take the square root
+    // If there are remaining values, calculate the offer
 
-      bankerOffer.value = rms.toInt(); // Set the banker offer to the RMS value
-    } else {
-      bankerOffer.value = Random().nextInt(10000) + 5000; // Fallback value
-    }
+    // Step 1: Calculate the average value
+    double average = priceValues.reduce((a, b) => a + b) / priceValues.length;
+
+    // Step 2: Adjust for high-value risk (e.g., give more weight to higher values)
+    int maxValue = priceValues.reduce((a, b) => a > b ? a : b);
+    double riskAdjustment = (maxValue > 10000) ? 0.8 : 1.0;
+
+    // Step 3: Psychological manipulation (offer less to tempt but not too generous)
+    double psychologicalFactor =
+        0.85; // Bank offers ~85% of the adjusted average
+
+    // Final banker offer
+    double offer = average * riskAdjustment * psychologicalFactor;
+
+    // Set the banker offer value
+    bankerOffer.value = offer.toInt();
 
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
           width: MediaQuery.of(Get.context!).size.width / 1.8,
-          height: MediaQuery.of(Get.context!).size.width / 1.5,
+          height: MediaQuery.of(Get.context!).size.width / 2,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             image: const DecorationImage(
@@ -672,6 +689,27 @@ class PriceController extends GetxController {
       ),
       barrierDismissible: false,
     );
+    Future.delayed(const Duration(seconds: 5), () {
+      // Navigate to the FirstPage
+      Get.back();
+      showConguration();
+    });
+  }
+
+  void showConguration() {
+    Get.dialog(const Dialog(
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Text(
+          "Congurataion",
+          style: TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ));
     Future.delayed(const Duration(seconds: 5), () {
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
