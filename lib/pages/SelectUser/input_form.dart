@@ -16,6 +16,7 @@ class _InputForumState extends State<InputForum> {
       []; // List to store user and case info
   List<String> cases = List.generate(
       26, (index) => "images/Case ${index + 1}.png"); // Global case images list
+  int i = 1;
 
   void addPlayer() {
     if (_controller.text.isNotEmpty) {
@@ -23,16 +24,13 @@ class _InputForumState extends State<InputForum> {
       if (cases.isNotEmpty) {
         cases.shuffle();
         String assignedCase = cases.removeAt(0);
-        int i = 1;
         // Add player to the list
         setState(() {
-          players.add({
-            'userName': playerName,
-            'caseImage': assignedCase,
-            'count': i++
-          });
+          players.add(
+              {'userName': playerName, 'caseImage': assignedCase, 'count': i});
         });
-
+        debugPrint("this is the count$i");
+        i++;
         // Show pop-up with assigned case
         Get.dialog(
           Dialog(

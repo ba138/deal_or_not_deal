@@ -247,7 +247,8 @@ class _MainPageState extends State<MainPage> {
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
-                                  height: 40,
+                                  height:
+                                      MediaQuery.sizeOf(context).height / 19.8,
                                   decoration: BoxDecoration(
                                       color: Colors.transparent,
                                       borderRadius: BorderRadius.circular(4)),
@@ -280,7 +281,8 @@ class _MainPageState extends State<MainPage> {
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
-                                  height: 40,
+                                  height:
+                                      MediaQuery.sizeOf(context).height / 19.8,
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [
@@ -566,7 +568,8 @@ class _MainPageState extends State<MainPage> {
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                height: 40,
+                                height:
+                                    MediaQuery.sizeOf(context).height / 19.8,
                                 decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(4)),
@@ -598,7 +601,8 @@ class _MainPageState extends State<MainPage> {
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                height: 40,
+                                height:
+                                    MediaQuery.sizeOf(context).height / 19.8,
                                 decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [

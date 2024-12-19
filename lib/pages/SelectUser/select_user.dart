@@ -117,8 +117,13 @@ class _SelectUserState extends State<SelectUser> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     widget.usersName.sort((a, b) => a['count'].compareTo(b['count']));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(40.0),
