@@ -1,7 +1,5 @@
-import 'package:deal_or_not_deal/Controllers/price_controller.dart';
 import 'package:deal_or_not_deal/Controllers/splash_controller.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
-import 'package:deal_or_not_deal/utills/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
