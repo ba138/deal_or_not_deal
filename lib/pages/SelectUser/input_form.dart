@@ -1,5 +1,4 @@
 import 'package:deal_or_not_deal/pages/SelectUser/select_user.dart';
-import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +21,7 @@ class _InputForumState extends State<InputForum> {
     if (_controller.text.isNotEmpty) {
       String playerName = _controller.text.trim();
       if (cases.isNotEmpty) {
+        cases.shuffle();
         String assignedCase = cases.removeAt(0);
 
         // Add player to the list

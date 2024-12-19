@@ -1,3 +1,4 @@
+import 'package:deal_or_not_deal/pages/SelectBox/select_box.dart';
 import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
@@ -28,16 +29,11 @@ class _SelectUserState extends State<SelectUser> {
   Map<String, dynamic> selectedUser = {}; // Holds the final selected user data
 
   Future<void> playStartingSound() async {
-    // Initialize the audio engine
     soloud = SoLoud.instance;
     await soloud.init();
 
-    // Load the audio asset and play with looping
     source = await soloud.loadAsset('audio/starting_sound.mp3');
     soundHandle = await soloud.play(source, looping: true, volume: 1.0);
-    // startingSound = AudioPlayer();
-    // await startingSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    // await startingSound.play(DeviceFileSource("audio/starting_sound.mp3"));
   }
 
   Future<void> stopStartingSoundAndNavigate() async {
@@ -49,24 +45,16 @@ class _SelectUserState extends State<SelectUser> {
   }
 
   Future<void> startUserSelectionSound() async {
-    // userSelectionSound = AudioPlayer();
-    // await userSelectionSound.setReleaseMode(ReleaseMode.loop); // Loop the sound
-    // await userSelectionSound
-    //     .play(DeviceFileSource("audio/player_selection_sound.mp3"));
-    // Initialize the audio engine
     soloud = SoLoud.instance;
     await soloud.init();
 
-    // Load the audio asset and play with looping
     source = await soloud.loadAsset('audio/player_selection_sound.mp3');
     soundHandle = await soloud.play(source, looping: true, volume: 1.0);
   }
 
   Future<void> stopUserSelectionSound() async {
-    // Stop the playback
     await soloud.stop(soundHandle);
 
-    // Deinitialize the audio engine
     await soloud.disposeSource(source);
   }
 
@@ -74,27 +62,20 @@ class _SelectUserState extends State<SelectUser> {
     if (animationInProgress.value) return;
     playStartingSound();
     animationInProgress.value = true;
-    int cycles = 20; // Number of cycles before the selection stops
-    int finalIndex =
-        random.nextInt(widget.usersName.length); // Randomly chosen box
+    int cycles = 20;
+    int finalIndex = random.nextInt(widget.usersName.length);
 
-    // Animation loop
     for (int i = 0; i <= cycles + finalIndex; i++) {
       highlightedIndex.value = i % widget.usersName.length;
-      await Future.delayed(
-          Duration(milliseconds: 80 + (i * 10))); // Gradually slow down
+      await Future.delayed(Duration(milliseconds: 80 + (i * 10)));
     }
 
     animationInProgress.value = false;
     selectedUser = widget.usersName[finalIndex];
 
-    // Log the selected user for debugging
-    debugPrint("Selected User: ${selectedUser.toString()}");
-
     stopStartingSoundAndNavigate();
     startUserSelectionSound();
 
-    // Display winner announcement dialog
     Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
@@ -124,16 +105,13 @@ class _SelectUserState extends State<SelectUser> {
       barrierDismissible: false,
     );
 
-    // Navigate after dialog dismissal (optional)
     Future.delayed(const Duration(seconds: 5), () {
       stopUserSelectionSound();
       Get.back(); // Close the dialog
 
-      // Verify navigation to SplashPage
-      debugPrint(
-          "Navigating to SplashPage with selectedUser: ${selectedUser.toString()}");
-
-      Get.offAll(() => SplashPage(uaerscase: selectedUser));
+      Get.offAll(() => SelectBox(
+            userName: selectedUser['userName'],
+          ));
       Get.deleteAll(force: true);
     });
   }
