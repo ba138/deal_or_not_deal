@@ -19,9 +19,9 @@ class _InputForumState extends State<InputForum> {
       26, (index) => "images/Case ${index + 1}.png"); // Global case images list
   int i = 1;
 
-  void addPlayer() {
-    if (_controller.text.isNotEmpty) {
-      String playerName = _controller.text.trim();
+  void addPlayer(String controller) {
+    if (controller.isNotEmpty) {
+      String playerName = controller.trim();
       if (cases.isNotEmpty) {
         cases.shuffle();
         String assignedCase = cases.removeAt(0);
@@ -34,8 +34,9 @@ class _InputForumState extends State<InputForum> {
         i++;
         // Show pop-up with assigned case
         Get.dialog(
+          barrierColor: Colors.black,
           Dialog(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.black,
             child: Container(
               height: 300,
               width: 300,
@@ -44,19 +45,19 @@ class _InputForumState extends State<InputForum> {
               ),
               child: Column(
                 children: [
+                  Image.asset(
+                    assignedCase,
+                    height: 200,
+                    width: 200,
+                  ),
                   Text(
-                    "$playerName is assign with",
+                    " is assign to $playerName",
                     style: const TextStyle(
                       fontSize: 24,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Image.asset(
-                    assignedCase,
-                    height: 200,
-                    width: 200,
-                  )
                 ],
               ),
             ),
@@ -152,17 +153,21 @@ class _InputForumState extends State<InputForum> {
                               labelText: "Enter Player Name",
                               border: OutlineInputBorder(),
                             ),
+                            onSubmitted: (value) {
+                              // Trigger the case assignment when Enter is pressed
+                              if (value.isNotEmpty) {
+                                addPlayer(value);
+                              }
+                            },
                           ),
                           const SizedBox(height: 60),
                           InkWell(
-                            onTap: addPlayer,
-                            // onTap: () {
-                            //   Get.offAll(() => SplashPage(uaerscase: const {
-                            //         'userName': "Basit Ali",
-                            //         'caseImage':
-                            //             "images/Flying Jets - 5,000.png"
-                            //       }));
-                            // },
+                            onTap: () {
+                              // Trigger the case assignment on button tap
+                              if (_controller.text.isNotEmpty) {
+                                addPlayer(_controller.text);
+                              }
+                            },
                             child: Container(
                               height: 56,
                               width: 120,
@@ -170,12 +175,10 @@ class _InputForumState extends State<InputForum> {
                                 gradient: const LinearGradient(
                                   colors: [
                                     AppColors.primaryColor,
-                                    AppColors.secondPrimaryColor
+                                    AppColors.secondPrimaryColor,
                                   ],
-                                  begin: Alignment
-                                      .centerLeft, // Start from the left
-                                  end:
-                                      Alignment.centerRight, // End at the right
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                               ),

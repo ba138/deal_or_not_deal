@@ -1,5 +1,4 @@
 import 'package:deal_or_not_deal/pages/SelectBox/select_box.dart';
-import 'package:deal_or_not_deal/pages/splash_page/splash_page.dart';
 import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
@@ -105,7 +104,7 @@ class _SelectUserState extends State<SelectUser> {
       barrierDismissible: false,
     );
 
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 6), () {
       stopUserSelectionSound();
       Get.back(); // Close the dialog
 
