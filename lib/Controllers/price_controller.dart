@@ -101,6 +101,20 @@ class PriceController extends GetxController {
     }
   }
 
+  Future<void> playThinkingSound() async {
+    try {
+      // Initialize the audio engine
+      soloud = SoLoud.instance;
+      await soloud.init();
+
+      // Load the audio asset and play with looping
+      source = await soloud.loadAsset('audio/thinking_music.mp3');
+      soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
+  }
+
   Future<void> stopRingSound() async {
     await soloud.stop(soundHandle);
 
@@ -217,12 +231,18 @@ class PriceController extends GetxController {
         // Check if it is the last round
         int emptyCount = priceImagesDynamic.where((item) => item == "").length;
         if (emptyCount <= 20) {
-          Completer<void> completer = Completer<void>();
-          playRingSound();
+          // debugPrint("playing somg");
+          // playRingSound();
 
+          Completer<void> completer = Completer<void>();
+          debugPrint("playing somg");
+          playRingSound();
           _showPhoneCall(completer);
           await completer.future;
+          debugPrint("stop somg");
+          stopRingSound();
           Get.back();
+          playThinkingSound();
           _showBankerOffer();
         } else if (emptyCount == 24) {
           showbuttons.value = true;
@@ -455,6 +475,7 @@ class PriceController extends GetxController {
                   InkWell(
                     onTap: () async {
                       Get.back(); // Close the dialog
+                      stopRingSound();
                       _showConguritaionDialog(bankerOffer.value);
                     },
                     child: Container(
