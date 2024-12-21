@@ -372,7 +372,8 @@ class _MainPageState extends State<MainPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Expanded(
+                            SizedBox(
+                              height: MediaQuery.sizeOf(context).height / 1.65,
                               child: Obx(() {
                                 return GridView.builder(
                                   gridDelegate:
@@ -422,6 +423,9 @@ class _MainPageState extends State<MainPage> {
                                   },
                                 );
                               }),
+                            ),
+                            const SizedBox(
+                              height: 4,
                             ),
                             Obx(
                               () => priceController.showbuttons.value != true

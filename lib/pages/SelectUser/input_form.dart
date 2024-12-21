@@ -51,7 +51,7 @@ class _InputForumState extends State<InputForum> {
                     width: 200,
                   ),
                   Text(
-                    " is assign to $playerName",
+                    "Is assigned to $playerName",
                     style: const TextStyle(
                       fontSize: 24,
                       color: Colors.white,

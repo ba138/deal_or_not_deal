@@ -35,20 +35,13 @@ class _SelectUserState extends State<SelectUser> {
     soundHandle = await soloud.play(source, looping: true, volume: 1.0);
   }
 
-  Future<void> stopStartingSoundAndNavigate() async {
-    // Stop the playback
-    await soloud.stop(soundHandle);
-
-    // Deinitialize the audio engine
-    await soloud.disposeSource(source);
-  }
-
   Future<void> startUserSelectionSound() async {
     soloud = SoLoud.instance;
     await soloud.init();
 
     source = await soloud.loadAsset('audio/player_selection_sound.mp3');
-    soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+    soundHandle =
+        await soloud.play(source, looping: true, volume: 1.0, pan: 0.0);
   }
 
   Future<void> stopUserSelectionSound() async {
@@ -59,21 +52,21 @@ class _SelectUserState extends State<SelectUser> {
 
   Future<void> startSelectionAnimation() async {
     if (animationInProgress.value) return;
-    playStartingSound();
+    await playStartingSound();
     animationInProgress.value = true;
     int cycles = 20;
     int finalIndex = random.nextInt(widget.usersName.length);
 
     for (int i = 0; i <= cycles + finalIndex; i++) {
       highlightedIndex.value = i % widget.usersName.length;
-      await Future.delayed(Duration(milliseconds: 80 + (i * 10)));
+      await Future.delayed(Duration(milliseconds: 90 + (i * 10)));
     }
 
     animationInProgress.value = false;
     selectedUser = widget.usersName[finalIndex];
 
-    stopStartingSoundAndNavigate();
-    startUserSelectionSound();
+    // stopUserSelectionSound();
+    await startUserSelectionSound();
 
     Get.dialog(
       Dialog(
@@ -104,8 +97,8 @@ class _SelectUserState extends State<SelectUser> {
       barrierDismissible: false,
     );
 
-    Future.delayed(const Duration(seconds: 6), () {
-      stopUserSelectionSound();
+    Future.delayed(const Duration(seconds: 5), () async {
+      await stopUserSelectionSound();
       Get.back(); // Close the dialog
 
       Get.offAll(() => SelectBox(

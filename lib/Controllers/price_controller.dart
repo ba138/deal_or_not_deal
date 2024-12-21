@@ -5,7 +5,6 @@ import 'package:deal_or_not_deal/utills/colors.dart';
 import 'package:deal_or_not_deal/utills/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:math';
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 class PriceController extends GetxController {
@@ -56,12 +55,6 @@ class PriceController extends GetxController {
       // Load the audio asset and play with looping
       source = await soloud.loadAsset('audio/claping.mp3');
       soundHandle = await soloud.play(source, looping: true, volume: 1.0);
-      Future.delayed(const Duration(seconds: 3), () async {
-        await soloud.stop(soundHandle);
-
-        // Deinitialize the audio engine
-        await soloud.disposeSource(source);
-      });
     } catch (e) {
       print("Error initializing or playing audio: $e");
     }
@@ -76,12 +69,6 @@ class PriceController extends GetxController {
       // Load the audio asset and play with looping
       source = await soloud.loadAsset('audio/drum_roll.mp3');
       soundHandle = await soloud.play(source, looping: false, volume: 1.0);
-      Future.delayed(const Duration(seconds: 3), () async {
-        await soloud.stop(soundHandle);
-
-        // Deinitialize the audio engine
-        await soloud.disposeSource(source);
-      });
     } catch (e) {
       print("Error initializing or playing audio: $e");
     }
@@ -198,6 +185,7 @@ class PriceController extends GetxController {
       );
 
       Future.delayed(const Duration(seconds: 3), () {
+        stopRingSound();
         completer.complete();
         Get.back();
       });
@@ -235,12 +223,15 @@ class PriceController extends GetxController {
           // playRingSound();
 
           Completer<void> completer = Completer<void>();
-          debugPrint("playing somg");
-          playRingSound();
-          _showPhoneCall(completer);
-          await completer.future;
-          debugPrint("stop somg");
-          stopRingSound();
+          debugPrint("Playing ringing sound...");
+          // await playRingSound(); // Start ringing
+
+          await _showPhoneCall(completer); // Show phone call dialog
+          await completer.future; // Wait for user action
+
+          stopRingSound(); // Stop ringing after user action
+          debugPrint("Ringing sound stopped");
+
           Get.back();
           playThinkingSound();
           _showBankerOffer();
@@ -261,7 +252,9 @@ class PriceController extends GetxController {
     }
   }
 
-  void _showPhoneCall(Completer completer) {
+  Future<void> _showPhoneCall(Completer<void> completer) async {
+    await playRingSound(); // Ensure sound starts before the dialog
+
     Get.dialog(
       Dialog(
           backgroundColor: Colors.transparent,
@@ -324,7 +317,7 @@ class PriceController extends GetxController {
               height: 50,
             ),
             const Text(
-              "congratulation",
+              "congratulations",
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 36,
@@ -523,6 +516,13 @@ class PriceController extends GetxController {
                         update();
                       } else {
                         stopRingSound(); // Stop the ringing sound
+                        playClappingSound();
+                        Future.delayed(
+                            const Duration(
+                              seconds: 4,
+                            ), () {
+                          stopRingSound(); // Stop the ringing sound
+                        });
                         Get.back(); // Close the dialog
                         nextRound();
                       }
@@ -704,7 +704,7 @@ class PriceController extends GetxController {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "congratulation",
+                "congratulations",
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 36,
