@@ -249,6 +249,8 @@ class PriceController extends GetxController {
           debugPrint("this is value of showbutton:${showbuttons.value}");
           stopRingSound(); // Stop the ringing sound
           Get.back();
+          playThinkingSound();
+
           update();
         } else {
           stopRingSound(); // Stop the ringing sound
@@ -322,7 +324,7 @@ class PriceController extends GetxController {
               height: 50,
             ),
             const Text(
-              "Congurataion",
+              "congratulation",
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 36,
@@ -516,7 +518,7 @@ class PriceController extends GetxController {
                         showbuttons.value = true;
                         debugPrint(
                             "this is value of showbutton:${showbuttons.value}");
-                        stopRingSound(); // Stop the ringing sound
+                        playThinkingSound();
                         Get.back();
                         update();
                       } else {
@@ -569,6 +571,7 @@ class PriceController extends GetxController {
     isSwap.value = true;
     // Find the first non-empty element in caseDynamic
     int caseIndex = caseDynamic.indexWhere((element) => element.isNotEmpty);
+    stopRingSound(); // Stop the ringing sound
 
     // Find the first non-empty element in priceImagesDynamic
     int priceIndex =
@@ -638,6 +641,7 @@ class PriceController extends GetxController {
 
   Future<void> revealPlayerCase() async {
     Map<String, dynamic>? matchedItem;
+    stopRingSound(); // Stop the ringing sound
 
 // First, check in priceListOne
     matchedItem = priceListOne.firstWhere(
@@ -699,6 +703,14 @@ class PriceController extends GetxController {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text(
+                "congratulation",
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Image.asset(
                 removedPriceImage2.value,
                 height: 400,
@@ -710,27 +722,6 @@ class PriceController extends GetxController {
       ),
       barrierDismissible: false,
     );
-    Future.delayed(const Duration(seconds: 5), () {
-      // Navigate to the FirstPage
-      Get.back();
-      showConguration();
-    });
-  }
-
-  void showConguration() {
-    Get.dialog(const Dialog(
-      backgroundColor: Colors.transparent,
-      child: Center(
-        child: Text(
-          "Congurataion",
-          style: TextStyle(
-            color: AppColors.primaryColor,
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    ));
     Future.delayed(const Duration(seconds: 5), () {
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());

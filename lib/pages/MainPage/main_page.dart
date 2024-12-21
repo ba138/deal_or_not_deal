@@ -330,8 +330,8 @@ class _MainPageState extends State<MainPage> {
                     child: Row(
                       children: [
                         Container(
-                          height: 120,
-                          width: 600,
+                          height: MediaQuery.sizeOf(context).height / 6,
+                          width: MediaQuery.sizeOf(context).height / 1.2,
                           decoration: const BoxDecoration(
                             color: Colors.transparent,
                             image: DecorationImage(
