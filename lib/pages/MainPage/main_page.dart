@@ -424,9 +424,6 @@ class _MainPageState extends State<MainPage> {
                                 );
                               }),
                             ),
-                            const SizedBox(
-                              height: 4,
-                            ),
                             Obx(
                               () => priceController.showbuttons.value != true
                                   ? Image.asset(

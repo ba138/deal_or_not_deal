@@ -69,8 +69,9 @@ class _SelectUserState extends State<SelectUser> {
     await startUserSelectionSound();
 
     Get.dialog(
+      barrierColor: Colors.black,
       Dialog(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         child: Container(
           height: 500,
           width: 500,

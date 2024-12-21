@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:window_manager/window_manager.dart';
+import 'package:logging/logging.dart';
 
 void main() async {
   // Ensure all bindings are initialized before using window_manager
   WidgetsFlutterBinding.ensureInitialized();
-
+  _setupLogging();
   // Initialize the window_manager
   await windowManager.ensureInitialized();
 
@@ -26,6 +27,22 @@ void main() async {
   });
 
   runApp(const MyApp());
+}
+
+void _setupLogging() {
+  // Set the logging level to capture all logs
+  Logger.root.level = Level.ALL; // Capture all log levels
+  Logger.root.onRecord.listen((record) {
+    // Print logs to console
+    print(
+        '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}');
+    if (record.error != null) {
+      print('Error: ${record.error}');
+    }
+    if (record.stackTrace != null) {
+      print('StackTrace: ${record.stackTrace}');
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
