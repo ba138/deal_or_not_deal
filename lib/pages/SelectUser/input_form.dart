@@ -71,7 +71,7 @@ class _InputForumState extends State<InputForum> {
           Get.back();
           if (players.length == 26) {
             Get.deleteAll(force: true);
-            stopStartingSoundAndNavigate();
+            // stopStartingSoundAndNavigate();
             Get.offAll(() => SelectUser(
                   usersName: players,
                 ));
@@ -92,41 +92,41 @@ class _InputForumState extends State<InputForum> {
     }
   }
 
-  late SoLoud soloud;
-  late SoundHandle soundHandle;
-  late AudioSource source;
+  // late SoLoud soloud;
+  // late SoundHandle soundHandle;
+  // late AudioSource source;
 
-  Future<void> playStartingSound() async {
-    try {
-      // Initialize the audio engine
-      soloud = SoLoud.instance;
-      await soloud.init();
+  // Future<void> playStartingSound() async {
+  //   try {
+  //     // Initialize the audio engine
+  //     soloud = SoLoud.instance;
+  //     await soloud.init();
 
-      // Load the audio asset and play with looping
-      source = await soloud.loadAsset('audio/starting_sound.mp3');
-      soundHandle = await soloud.play(source, looping: true, volume: 1.0);
-    } catch (e) {
-      print("Error initializing or playing audio: $e");
-    }
-  }
+  //     // Load the audio asset and play with looping
+  //     source = await soloud.loadAsset('audio/starting_sound.mp3');
+  //     soundHandle = await soloud.play(source, looping: true, volume: 1.0);
+  //   } catch (e) {
+  //     print("Error initializing or playing audio: $e");
+  //   }
+  // }
 
-  Future<void> stopStartingSoundAndNavigate() async {
-    try {
-      // Stop the playback
-      await soloud.stop(soundHandle);
+  // Future<void> stopStartingSoundAndNavigate() async {
+  //   try {
+  //     // Stop the playback
+  //     await soloud.stop(soundHandle);
 
-      // Deinitialize the audio engine
-      await soloud.disposeSource(source);
-    } catch (e) {
-      print("Error stopping or disposing audio: $e");
-    }
-  }
+  //     // Deinitialize the audio engine
+  //     await soloud.disposeSource(source);
+  //   } catch (e) {
+  //     print("Error stopping or disposing audio: $e");
+  //   }
+  // }
 
-  @override
-  void initState() {
-    playStartingSound();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   playStartingSound();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
