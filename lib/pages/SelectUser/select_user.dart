@@ -73,8 +73,8 @@ class _SelectUserState extends State<SelectUser> {
       Dialog(
         backgroundColor: Colors.black,
         child: Container(
-          height: 500,
-          width: 500,
+          height: 700,
+          width: 700,
           decoration: const BoxDecoration(
             image: DecorationImage(image: AssetImage("images/caseopen.png")),
           ),
@@ -83,8 +83,17 @@ class _SelectUserState extends State<SelectUser> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "${selectedUser['userName']} Wins!",
+                "${selectedUser['userName']}",
                 style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const Text(
+                "Wins!",
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 32,
                   color: Colors.black,
@@ -112,89 +121,100 @@ class _SelectUserState extends State<SelectUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height / 1.35,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 7,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20.0,
-                    childAspectRatio: 1.56),
-                itemCount: widget.usersName.length,
-                itemBuilder: (context, index) {
-                  String caseImage = widget.usersName[index]['caseImage']!;
-                  widget.usersName
-                      .sort((a, b) => a['count'].compareTo(b['count']));
+      body: Container(
+        height: MediaQuery.sizeOf(context).height,
+        width: MediaQuery.sizeOf(context).width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/splash_image.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height / 1.35,
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 7,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20.0,
+                      childAspectRatio: 1.56),
+                  itemCount: widget.usersName.length,
+                  itemBuilder: (context, index) {
+                    String caseImage = widget.usersName[index]['caseImage']!;
+                    widget.usersName
+                        .sort((a, b) => a['count'].compareTo(b['count']));
 
-                  return Obx(
-                    () => Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 4,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: highlightedIndex.value == index
-                              ? Colors.white
-                              : Colors.transparent,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
+                    return Obx(
+                      () => Card(
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Image.asset(
-                              caseImage,
-                              fit: BoxFit.contain,
+                        elevation: 4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: highlightedIndex.value == index
+                                ? Colors.white
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
                             ),
-                          ],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(
+                                caseImage,
+                                fit: BoxFit.contain,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Obx(
-              () => InkWell(
-                onTap:
-                    animationInProgress.value ? null : startSelectionAnimation,
-                child: Container(
-                  height: 56,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppColors.primaryColor,
-                        AppColors.secondPrimaryColor
-                      ],
-                      begin: Alignment.centerLeft, // Start from the left
-                      end: Alignment.centerRight, // End at the right
+              const SizedBox(height: 20),
+              Obx(
+                () => InkWell(
+                  onTap: animationInProgress.value
+                      ? null
+                      : startSelectionAnimation,
+                  child: Container(
+                    height: 56,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.primaryColor,
+                          AppColors.secondPrimaryColor
+                        ],
+                        begin: Alignment.centerLeft, // Start from the left
+                        end: Alignment.centerRight, // End at the right
+                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Chose Player",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                    child: const Center(
+                      child: Text(
+                        "Choose Player",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

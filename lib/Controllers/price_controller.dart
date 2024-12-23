@@ -46,10 +46,45 @@ class PriceController extends GetxController {
     "images/4 Cases To Open.png",
     "images/3 Cases To Open.png",
     "images/2 Cases To Open.png",
-    "images/1 Case To Open.png"
+    "images/1 Case To Open.png",
+    "images/5 Cases To Open.png",
+    "images/4 Cases To Open.png",
+    "images/3 Cases To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/4 Cases To Open.png",
+    "images/3 Cases To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/3 Cases To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
+    "images/1 Case To Open.png",
   ].obs;
-
+  Rx<int> roundCount = 0.obs;
+// Declare these at the top of your class or as part of the state management
+  Rx<int> currentRound = 0.obs; // Track the current round, starting from 1
+  Rx<int> remainingCases = 24.obs;
   Future<void> playClappingSound() async {
+    try {
+      // Initialize the audio engine
+      // soloud = SoLoud.instance;
+
+      // Load the audio asset and play with looping
+      source = await soloud.loadAsset('audio/claping.mp3');
+      soundHandle = await soloud.play(source, looping: false, volume: 1.0);
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
+  }
+
+  Future<void> playClappingSound3() async {
     try {
       // Initialize the audio engine
       // soloud = SoLoud.instance;
@@ -130,54 +165,41 @@ class PriceController extends GetxController {
   }
 
   Future<void> onCaseTapped(int index) async {
-    if (!tappedCases[index] && selectedCases.length < maxCasesPerRound.value) {
-      tappedCases[index] = true;
-      selectedCases.add(index);
+    final casesPerRound = [6, 5, 4, 3, 2, 2, 2];
+    roundCount.value++;
 
-      // Reveal the case and price image
-      revealedCases.add(index);
-
+    if (!tappedCases[index]) {
+      tappedCases[index] = true; // Mark the case as tapped
+      selectedCases.add(index); // Add the case to selected
+      revealedCases.add(index); // Mark the case as revealed
       String revealedImage = priceImagesDynamic[index];
 
-      // Initialize matchedItem to null
-      Map<String, dynamic>? matchedItem;
-
-// First, check in priceListOne
-      matchedItem = checkOne.firstWhere(
+      // Find matched item
+      Map<String, dynamic>? matchedItem = checkOne.firstWhere(
         (item) => item['image'] == revealedImage,
-        orElse: () =>
-            <String, dynamic>{}, // Return an empty map instead of null
+        orElse: () => <String, dynamic>{},
       );
 
-// If no match is found in priceListOne, check in priceListTwo
       if (matchedItem.isEmpty) {
         matchedItem = checkTwo.firstWhere(
           (item) => item['image'] == revealedImage,
-          orElse: () =>
-              <String, dynamic>{}, // Return an empty map instead of null
+          orElse: () => <String, dynamic>{},
         );
       }
 
-// Ensure a match is found in one of the lists
+      // Handle sound effects based on matched item
       if (matchedItem.isNotEmpty) {
-        // Parse the priceValue and remove any commas
         int priceValue =
             int.parse(matchedItem['priceValue'].replaceAll(",", ""));
-
-        // Compare the value and play the appropriate sound
         if (priceValue >= 2988) {
           drumRollSound();
         } else {
-          // await playDifferentSound(); // Play a different sound for lower values
-          await playClappingSound(); // Play clapping sound for higher values
+          await playClappingSound();
         }
-      } else {
-        // Handle the case where no match is found in both lists
-        debugPrint('No matching item found for image: $revealedImage');
       }
 
+      // Show the case opening dialog
       Completer<void> completer = Completer<void>();
-
       Get.dialog(
         Dialog(
           backgroundColor: Colors.transparent,
@@ -188,7 +210,6 @@ class PriceController extends GetxController {
               image: DecorationImage(image: AssetImage("images/caseopen.png")),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
@@ -203,69 +224,65 @@ class PriceController extends GetxController {
         barrierDismissible: false,
       );
 
+      // Close the dialog after a delay
       Future.delayed(const Duration(seconds: 3), () {
         stopRingSound();
         completer.complete();
         Get.back();
       });
 
-      // Wait for user confirmation
       await completer.future;
 
-      // Mark the case as used instead of removing it
-      priceImagesDynamic[index] = ""; // Clear the image to indicate it's used
-      caseDynamic[index] = ""; // Clear the case
+      // Mark the case as used
+      priceImagesDynamic[index] = "";
+      caseDynamic[index] = "";
 
-      // Update the image value to an empty string in dynamic lists
+      // Update dynamic lists
       for (var item in priceListOneDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = ""; // Update the image
-          priceListOneDynamic.refresh(); // Notify UI
+          item['image'] = "";
+          priceListOneDynamic.refresh();
           break;
         }
       }
-
       for (var item in priceListTwoDynamic) {
         if (item['image'] == revealedImage) {
-          item['image'] = ""; // Update the image
-          priceListTwoDynamic.refresh(); // Notify UI
+          item['image'] = "";
+          priceListTwoDynamic.refresh();
           break;
         }
       }
 
-      // Check if the maximum number of cases have been selected
-      if (selectedCases.length == maxCasesPerRound.value) {
-        // Check if it is the last round
-        int emptyCount = priceImagesDynamic.where((item) => item == "").length;
-        if (emptyCount <= 20) {
-          // debugPrint("playing somg");
-          // playRingSound();
+      // Calculate the number of empty cases
+      int emptyCount = priceImagesDynamic.where((item) => item.isEmpty).length;
+      int currentRound = emptyCount ~/ 6;
+      int maxBoxesToOpen =
+          currentRound < casesPerRound.length ? casesPerRound[currentRound] : 0;
 
-          Completer<void> completer = Completer<void>();
-          debugPrint("Playing ringing sound...");
-          // await playRingSound(); // Start ringing
+      if (selectedCases.length >= maxBoxesToOpen) {
+        // Reset selected cases for the next round
+        selectedCases.clear();
 
-          await _showPhoneCall(completer); // Show phone call dialog
-          await completer.future; // Wait for user action
+        // Show phone call dialog
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
 
-          // stopRingSound(); // Stop ringing after user action
-          debugPrint("Ringing sound stopped");
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
 
-          Get.back();
-          playThinkingSound();
-          _showBankerOffer();
-        } else if (emptyCount == 24) {
+        // Handle special case for second-last round
+        if (emptyCount == 24) {
+          // Final steps for last case
           showbuttons.value = true;
-          debugPrint("this is value of showbutton:${showbuttons.value}");
-          stopRingSound(); // Stop the ringing sound
-          Get.back();
+          debugPrint("Show buttons enabled: ${showbuttons.value}");
+          stopRingSound();
           playThinkingSound();
-
           update();
         } else {
-          stopRingSound(); // Stop the ringing sound
-          Get.back(); // Close the dialog
-          nextRound();
+          // Transition to the next round only after dialogs
+          nextRound(casesPerRound);
         }
       }
     }
@@ -338,7 +355,7 @@ class PriceController extends GetxController {
               height: 50,
             ),
             const Text(
-              "congratulations",
+              "congratulations!",
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 36,
@@ -545,7 +562,7 @@ class PriceController extends GetxController {
                           stopRingSound(); // Stop the ringing sound
                         });
                         Get.back(); // Close the dialog
-                        nextRound();
+                        // nextRound(casesPerRound);
                       }
                     },
                     child: Container(
@@ -577,12 +594,34 @@ class PriceController extends GetxController {
     );
   }
 
-  void nextRound() {
-    if (round.value < roundImages.length) {
-      maxCasesPerRound.value = roundImages.length - round.value.toInt();
+  void nextRound(List<int> casesPerRound) async {
+    // Check if we are still within the available rounds
+    if (round.value < casesPerRound.length - 1) {
       round.value++;
+      maxCasesPerRound.value = casesPerRound[round.value];
+    } else {
+      debugPrint("Last round reached, no more rounds available.");
+      maxCasesPerRound.value = 1; // Final round logic
     }
+
+    // Clear the selected cases as we transition to the next round
     selectedCases.clear();
+    debugPrint(
+        "Round updated to ${round.value}, max cases: ${maxCasesPerRound.value}");
+
+    // Delay the transition to make sure dialogs and sounds are completed first
+    Completer<void> roundTransitionCompleter = Completer<void>();
+
+    // Here, add a delay to ensure all tasks are completed before proceeding
+    Future.delayed(const Duration(seconds: 1), () {
+      roundTransitionCompleter.complete();
+    });
+
+    // Wait for the transition to complete before proceeding
+    await roundTransitionCompleter.future;
+
+    // Now that dialogs and tasks are complete, update the UI and move to the next round
+    update(); // Update UI after the round transition
   }
 
   void swapElements(
@@ -592,7 +631,6 @@ class PriceController extends GetxController {
     isSwap.value = true;
     // Find the first non-empty element in caseDynamic
     int caseIndex = caseDynamic.indexWhere((element) => element.isNotEmpty);
-    stopRingSound(); // Stop the ringing sound
 
     // Find the first non-empty element in priceImagesDynamic
     int priceIndex =
@@ -686,13 +724,16 @@ class PriceController extends GetxController {
 
       // Compare the value and play the appropriate sound
       if (priceValue > 2988) {
-        await playClappingSound(); // Play clapping sound for higher values
+        await playClappingSound3(); // Play clapping sound for higher values
       } else {
         // await playDifferentSound(); // Play a different sound for lower values
-        drumRollSound();
+        // drumRollSound();
+        await playClappingSound3(); // Play clapping sound for higher values
       }
     } else {
       // Handle the case where no match is found in both lists
+      await playClappingSound(); // Play clapping sound for higher values
+
       debugPrint('No matching item found for image: $removedPriceImage');
     }
     for (var item in priceListOneDynamic) {
@@ -725,7 +766,7 @@ class PriceController extends GetxController {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "congratulations",
+                "congratulations!",
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 36,
@@ -743,7 +784,7 @@ class PriceController extends GetxController {
       ),
       barrierDismissible: false,
     );
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 7), () {
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
     });

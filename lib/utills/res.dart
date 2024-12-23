@@ -344,7 +344,7 @@ List<String> priceImages = [
   "images/Interstellar - 10,000.png",
   "images/Rosa Nebula - 15,000.png",
   "images/TikTok Shuttle - 20,000.png",
-  "images/Rose Carriage - 25,000.png",
+  "images/Phoenix - 25,999.png",
   "images/Lion - 29,999.png",
   "images/TikTok Universe - 44,999.png"
 ];

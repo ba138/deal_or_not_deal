@@ -52,6 +52,7 @@ class _InputForumState extends State<InputForum> {
                   ),
                   Text(
                     "Is assigned to $playerName",
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 24,
                       color: Colors.white,
@@ -132,16 +133,24 @@ class _InputForumState extends State<InputForum> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (cases.isNotEmpty) ...[
-                SizedBox(
-                  height: 400,
-                  width: 400,
-                  child: Card(
+        child: Container(
+          height: MediaQuery.sizeOf(context).height,
+          width: MediaQuery.sizeOf(context).width,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/inputpic.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (cases.isNotEmpty) ...[
+                  SizedBox(
+                    height: 400,
+                    width: 400,
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -198,14 +207,14 @@ class _InputForumState extends State<InputForum> {
                       ),
                     ),
                   ),
-                ),
-              ] else
-                const Text(
-                  "All cases have been assigned.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              const SizedBox(height: 20),
-            ],
+                ] else
+                  const Text(
+                    "All cases have been assigned.",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),

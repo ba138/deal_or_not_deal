@@ -160,7 +160,7 @@ class _MainPageState extends State<MainPage> {
       "priceName": "TikTok Shuttle",
     },
     {
-      "image": "images/Rose Carriage - 25,000.png",
+      "image": "images/Phoenix - 25,999.png",
       "priceId": "24",
       "priceValue": "25999",
       "priceName": "Adams Dream",
@@ -425,117 +425,123 @@ class _MainPageState extends State<MainPage> {
                               }),
                             ),
                             Obx(
-                              () => priceController.showbuttons.value != true
-                                  ? Image.asset(
-                                      priceController.roundImages[
-                                          priceController.round.value - 1],
-                                      height:
-                                          MediaQuery.sizeOf(context).height /
-                                              12,
-                                      width: MediaQuery.sizeOf(context).width,
-                                      fit: BoxFit.contain,
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            if (priceController.isSwap.value ==
-                                                false) {
-                                              priceController.swapElements(
-                                                  widget.selectedUserData[
-                                                      'caseImage']);
-                                            } else {
-                                              Get.snackbar(
-                                                  "Swap", "Already Swap");
-                                            }
-                                          },
-                                          child: Container(
-                                            height: 56,
-                                            width: 200,
-                                            decoration: BoxDecoration(
-                                              gradient: priceController
-                                                          .isSwap.value ==
-                                                      false
-                                                  ? const LinearGradient(
-                                                      colors: [
-                                                        AppColors.primaryColor,
-                                                        AppColors
-                                                            .secondPrimaryColor
-                                                      ],
-                                                      begin: Alignment
-                                                          .centerLeft, // Start from the left
-                                                      end: Alignment
-                                                          .centerRight, // End at the right
-                                                    )
-                                                  : const LinearGradient(
-                                                      colors: [
-                                                        AppColors.primaryColor,
-                                                        AppColors.primaryColor
-                                                      ],
-                                                      begin: Alignment
-                                                          .centerLeft, // Start from the left
-                                                      end: Alignment
-                                                          .centerRight, // End at the right
-                                                    ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: const Center(
-                                              child: Text(
-                                                "Swap",
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
+                              () {
+                                return priceController.showbuttons.value != true
+                                    ? Image.asset(
+                                        priceController.roundImages[
+                                            priceController.roundCount.value],
+                                        height:
+                                            MediaQuery.sizeOf(context).height /
+                                                10,
+                                        width: MediaQuery.sizeOf(context).width,
+                                        fit: BoxFit.contain,
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              if (priceController
+                                                      .isSwap.value ==
+                                                  false) {
+                                                priceController.swapElements(
+                                                    widget.selectedUserData[
+                                                        'caseImage']);
+                                              } else {
+                                                Get.snackbar(
+                                                    "Swap", "Already Swap");
+                                              }
+                                            },
+                                            child: Container(
+                                              height: 56,
+                                              width: 200,
+                                              decoration: BoxDecoration(
+                                                gradient: priceController
+                                                            .isSwap.value ==
+                                                        false
+                                                    ? const LinearGradient(
+                                                        colors: [
+                                                          AppColors
+                                                              .primaryColor,
+                                                          AppColors
+                                                              .secondPrimaryColor
+                                                        ],
+                                                        begin: Alignment
+                                                            .centerLeft, // Start from the left
+                                                        end: Alignment
+                                                            .centerRight, // End at the right
+                                                      )
+                                                    : const LinearGradient(
+                                                        colors: [
+                                                          AppColors
+                                                              .primaryColor,
+                                                          AppColors.primaryColor
+                                                        ],
+                                                        begin: Alignment
+                                                            .centerLeft, // Start from the left
+                                                        end: Alignment
+                                                            .centerRight, // End at the right
+                                                      ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: const Center(
+                                                child: Text(
+                                                  "Swap",
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 30,
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            priceController.revealPlayerCase();
-                                          },
-                                          child: Container(
-                                            height: 56,
-                                            width: 200,
-                                            decoration: BoxDecoration(
-                                              gradient: const LinearGradient(
-                                                colors: [
-                                                  AppColors.primaryColor,
-                                                  AppColors.secondPrimaryColor
-                                                ],
-                                                begin: Alignment
-                                                    .centerLeft, // Start from the left
-                                                end: Alignment
-                                                    .centerRight, // End at the right
+                                          const SizedBox(
+                                            width: 30,
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              priceController
+                                                  .revealPlayerCase();
+                                            },
+                                            child: Container(
+                                              height: 56,
+                                              width: 200,
+                                              decoration: BoxDecoration(
+                                                gradient: const LinearGradient(
+                                                  colors: [
+                                                    AppColors.primaryColor,
+                                                    AppColors.secondPrimaryColor
+                                                  ],
+                                                  begin: Alignment
+                                                      .centerLeft, // Start from the left
+                                                  end: Alignment
+                                                      .centerRight, // End at the right
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: const Center(
-                                              child: Text(
-                                                "Reveal",
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
+                                              child: const Center(
+                                                child: Text(
+                                                  "Reveal",
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                        ],
+                                      );
+                              },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            )
+                            // const SizedBox(
+                            //   height: 4,
+                            // )
                           ],
                         ),
                       ),
