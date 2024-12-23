@@ -21,25 +21,25 @@ class SplashController extends GetxController {
   }
 
   Future<void> stopStartingSoundAndNavigate() async {
-    try {
-      // Stop the playback
-      await soloud.stop(soundHandle);
+    // try {
+    //   // Stop the playback
+    //   await soloud.stop(soundHandle);
 
-      // Deinitialize the audio engine
-      await soloud.disposeSource(source);
-    } catch (e) {
-      print("Error stopping or disposing audio: $e");
-    }
+    //   // Deinitialize the audio engine
+    //   await soloud.disposeSource(source);
+    // } catch (e) {
+    //   print("Error stopping or disposing audio: $e");
+    // }
 
     // Navigate to the next screen
     Get.offAll(() => const InputForum());
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    playStartingSound();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   // playStartingSound();
+  // }
 
   @override
   void dispose() {
