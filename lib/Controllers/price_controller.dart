@@ -355,7 +355,7 @@ class PriceController extends GetxController {
               height: 50,
             ),
             const Text(
-              "congratulations!",
+              "Congratulations!",
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 36,
@@ -766,7 +766,7 @@ class PriceController extends GetxController {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "congratulations!",
+                "Congratulations!",
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 36,
