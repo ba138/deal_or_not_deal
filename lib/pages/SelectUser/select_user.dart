@@ -73,8 +73,8 @@ class _SelectUserState extends State<SelectUser> {
       Dialog(
         backgroundColor: Colors.black,
         child: Container(
-          height: 700,
-          width: 700,
+          height: 500,
+          width: 500,
           decoration: const BoxDecoration(
             image: DecorationImage(image: AssetImage("images/caseopen.png")),
           ),
