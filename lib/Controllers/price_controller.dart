@@ -784,7 +784,10 @@ class PriceController extends GetxController {
       ),
       barrierDismissible: false,
     );
-    Future.delayed(const Duration(seconds: 7), () {
+    Future.delayed(
+        const Duration(
+          seconds: 12,
+        ), () {
       stopRingSound();
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
