@@ -62,7 +62,7 @@ class PriceController extends GetxController {
     "images/2 Cases To Open.png",
     "images/1 Case To Open.png",
     "images/2 Cases To Open.png",
-    "images/2 Cases To Open.png",
+    "images/1 Case To Open.png",
     "images/2 Cases To Open.png",
     "images/1 Case To Open.png",
     "images/1 Case To Open.png",
@@ -255,15 +255,7 @@ class PriceController extends GetxController {
 
       // Calculate the number of empty cases
       int emptyCount = priceImagesDynamic.where((item) => item.isEmpty).length;
-      int currentRound = emptyCount ~/ 6;
-      int maxBoxesToOpen =
-          currentRound < casesPerRound.length ? casesPerRound[currentRound] : 0;
-
-      if (selectedCases.length >= maxBoxesToOpen) {
-        // Reset selected cases for the next round
-        selectedCases.clear();
-
-        // Show phone call dialog
+      if (emptyCount == 6) {
         Completer<void> phoneCallCompleter = Completer<void>();
         await _showPhoneCall(phoneCallCompleter);
         await phoneCallCompleter.future;
@@ -271,20 +263,93 @@ class PriceController extends GetxController {
         Get.back();
         playThinkingSound();
         _showBankerOffer();
+      } else if (emptyCount == 11) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
 
-        // Handle special case for second-last round
-        if (emptyCount == 24) {
-          // Final steps for last case
-          showbuttons.value = true;
-          debugPrint("Show buttons enabled: ${showbuttons.value}");
-          stopRingSound();
-          playThinkingSound();
-          update();
-        } else {
-          // Transition to the next round only after dialogs
-          nextRound(casesPerRound);
-        }
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
+      } else if (emptyCount == 15) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
+
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
+      } else if (emptyCount == 18) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
+
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
+      } else if (emptyCount == 20) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
+
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
+      } else if (emptyCount == 22) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
+
+        Get.back();
+        playThinkingSound();
+        _showBankerOffer();
+      } else if (emptyCount == 24) {
+        Completer<void> phoneCallCompleter = Completer<void>();
+        await _showPhoneCall(phoneCallCompleter);
+        await phoneCallCompleter.future;
+
+        Get.back();
+        Completer<void> playCallCompleter = Completer<void>();
+
+        playThinkingSound();
+        _showBankerOfferForLastRound(playCallCompleter, true);
+        await phoneCallCompleter.future;
+        showbuttons.value = true;
+        debugPrint("Show buttons enabled: ${showbuttons.value}");
+        stopRingSound();
+        playThinkingSound();
+        update();
       }
+      // int currentRound = emptyCount ~/ 6;
+      // int maxBoxesToOpen =
+      //     currentRound < casesPerRound.length ? casesPerRound[currentRound] : 0;
+
+      // if (selectedCases.length >= maxBoxesToOpen) {
+      //   // Reset selected cases for the next round
+      //   selectedCases.clear();
+
+      //   // Show phone call dialog
+      //   Completer<void> phoneCallCompleter = Completer<void>();
+      //   await _showPhoneCall(phoneCallCompleter);
+      //   await phoneCallCompleter.future;
+
+      //   Get.back();
+      //   playThinkingSound();
+      //   _showBankerOffer();
+
+      //   // Handle special case for second-last round
+      //   if (emptyCount == 24) {
+      //     // Final steps for last case
+      //     showbuttons.value = true;
+      //     debugPrint("Show buttons enabled: ${showbuttons.value}");
+      //     stopRingSound();
+      //     playThinkingSound();
+      //     update();
+      //   } else {
+      //     // Transition to the next round only after dialogs
+      //     nextRound(casesPerRound);
+      //   }
+      // }
     }
   }
 
@@ -594,34 +659,189 @@ class PriceController extends GetxController {
     );
   }
 
-  void nextRound(List<int> casesPerRound) async {
-    // Check if we are still within the available rounds
-    if (round.value < casesPerRound.length - 1) {
-      round.value++;
-      maxCasesPerRound.value = casesPerRound[round.value];
-    } else {
-      debugPrint("Last round reached, no more rounds available.");
-      maxCasesPerRound.value = 1; // Final round logic
+  void _showBankerOfferForLastRound(
+    Completer playCallCompleter,
+    bool islastRound,
+  ) {
+    List<int> priceValues = [];
+
+    // Collect all remaining case values
+    for (var item in priceListOneDynamic) {
+      if (item['image'] != "") {
+        priceValues.add(int.parse(item['priceValue'].replaceAll(",", "")));
+      }
     }
 
-    // Clear the selected cases as we transition to the next round
-    selectedCases.clear();
-    debugPrint(
-        "Round updated to ${round.value}, max cases: ${maxCasesPerRound.value}");
+    for (var item in priceListTwoDynamic) {
+      if (item['image'] != "") {
+        priceValues.add(int.parse(item['priceValue'].replaceAll(",", "")));
+      }
+    }
 
-    // Delay the transition to make sure dialogs and sounds are completed first
-    Completer<void> roundTransitionCompleter = Completer<void>();
+    // If there are remaining values, calculate the offer
 
-    // Here, add a delay to ensure all tasks are completed before proceeding
-    Future.delayed(const Duration(seconds: 1), () {
-      roundTransitionCompleter.complete();
-    });
+    // Step 1: Calculate the average value
+    double average = priceValues.reduce((a, b) => a + b) / priceValues.length;
 
-    // Wait for the transition to complete before proceeding
-    await roundTransitionCompleter.future;
+    // Step 2: Adjust for high-value risk (e.g., give more weight to higher values)
+    int maxValue = priceValues.reduce((a, b) => a > b ? a : b);
+    double riskAdjustment = (maxValue > 10000) ? 0.8 : 1.0;
 
-    // Now that dialogs and tasks are complete, update the UI and move to the next round
-    update(); // Update UI after the round transition
+    // Step 3: Psychological manipulation (offer less to tempt but not too generous)
+    double psychologicalFactor =
+        0.85; // Bank offers ~85% of the adjusted average
+
+    // Final banker offer
+    double offer = average * riskAdjustment * psychologicalFactor;
+
+    // Set the banker offer value
+    bankerOffer.value = offer.toInt();
+
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: MediaQuery.of(Get.context!).size.width / 1.8,
+          height: MediaQuery.of(Get.context!).size.width / 2,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            image: const DecorationImage(
+              image:
+                  AssetImage('images/Default Banker.jpg'), // Path to your image
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // TextField showing banker's offer
+              const Center(
+                child: Text(
+                  "BANK OFFER",
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              Container(
+                height: 60,
+                width: 250,
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade300,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    "${bankerOffer.value}",
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      Get.back(); // Close the dialog
+                      stopRingSound();
+                      _showConguritaionDialog(bankerOffer.value);
+                    },
+                    child: Container(
+                      height: 56,
+                      width: 200,
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Deal",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    "OR",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  InkWell(
+                    onTap: () {
+                      playCallCompleter.complete();
+                      int emptyCount =
+                          priceImagesDynamic.where((item) => item == "").length;
+                      debugPrint(
+                          "this is the lenght of caseDynamic:$emptyCount");
+                      if (emptyCount == 24) {
+                        showbuttons.value = true;
+                        debugPrint(
+                            "this is value of showbutton:${showbuttons.value}");
+                        playThinkingSound();
+                        Get.back();
+                        update();
+                      } else {
+                        stopRingSound(); // Stop the ringing sound
+                        playClappingSound();
+                        Future.delayed(
+                            const Duration(
+                              seconds: 4,
+                            ), () {
+                          stopRingSound(); // Stop the ringing sound
+                        });
+                        Get.back(); // Close the dialog
+                        // nextRound(casesPerRound);
+                      }
+                    },
+                    child: Container(
+                      height: 56,
+                      width: 200,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "No Deal",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 80),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false, // Prevent dismissal when tapping outside
+    );
   }
 
   void swapElements(
@@ -786,7 +1006,7 @@ class PriceController extends GetxController {
     );
     Future.delayed(
         const Duration(
-          seconds: 10,
+          seconds: 9,
         ), () {
       stopRingSound();
       // Navigate to the FirstPage
