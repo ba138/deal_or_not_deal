@@ -99,4 +99,4 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "Images/appicon.png"
-    icon_size: 150 
+    icon_size: 256 
