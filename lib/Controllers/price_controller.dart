@@ -62,7 +62,7 @@ class PriceController extends GetxController {
     "images/2 Cases To Open.png",
     "images/1 Case To Open.png",
     "images/2 Cases To Open.png",
-    "images/2 Case To Open.png",
+    "images/2 Cases To Open.png",
     "images/2 Cases To Open.png",
     "images/1 Case To Open.png",
     "images/1 Case To Open.png",
@@ -786,7 +786,7 @@ class PriceController extends GetxController {
     );
     Future.delayed(
         const Duration(
-          seconds: 12,
+          seconds: 10,
         ), () {
       stopRingSound();
       // Navigate to the FirstPage
