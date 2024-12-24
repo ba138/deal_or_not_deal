@@ -320,36 +320,6 @@ class PriceController extends GetxController {
         playThinkingSound();
         update();
       }
-      // int currentRound = emptyCount ~/ 6;
-      // int maxBoxesToOpen =
-      //     currentRound < casesPerRound.length ? casesPerRound[currentRound] : 0;
-
-      // if (selectedCases.length >= maxBoxesToOpen) {
-      //   // Reset selected cases for the next round
-      //   selectedCases.clear();
-
-      //   // Show phone call dialog
-      //   Completer<void> phoneCallCompleter = Completer<void>();
-      //   await _showPhoneCall(phoneCallCompleter);
-      //   await phoneCallCompleter.future;
-
-      //   Get.back();
-      //   playThinkingSound();
-      //   _showBankerOffer();
-
-      //   // Handle special case for second-last round
-      //   if (emptyCount == 24) {
-      //     // Final steps for last case
-      //     showbuttons.value = true;
-      //     debugPrint("Show buttons enabled: ${showbuttons.value}");
-      //     stopRingSound();
-      //     playThinkingSound();
-      //     update();
-      //   } else {
-      //     // Transition to the next round only after dialogs
-      //     nextRound(casesPerRound);
-      //   }
-      // }
     }
   }
 
