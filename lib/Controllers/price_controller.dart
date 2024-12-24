@@ -165,7 +165,6 @@ class PriceController extends GetxController {
   }
 
   Future<void> onCaseTapped(int index) async {
-    final casesPerRound = [6, 5, 4, 3, 2, 2, 2];
     roundCount.value++;
 
     if (!tappedCases[index]) {
