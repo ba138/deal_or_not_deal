@@ -914,6 +914,9 @@ class PriceController extends GetxController {
 
   Future<void> revealPlayerCase() async {
     Map<String, dynamic>? matchedItem;
+    stopRingSound();
+    stopRingSound2();
+
 // First, check in priceListOne
     matchedItem = priceListOne.firstWhere(
       (item) => item['image'] == removedPriceImage2.value,
