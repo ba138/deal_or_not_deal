@@ -19,6 +19,9 @@ class PriceController extends GetxController {
   late SoLoud soloud;
   late SoundHandle soundHandle;
   late AudioSource source;
+  late SoLoud soloudLastDeal;
+  late SoundHandle soundHandleLastDeal;
+  late AudioSource sourceLastDeal;
   late SoLoud soloudRing;
   late SoundHandle soundHandleRing;
   late AudioSource sourceRing;
@@ -146,6 +149,25 @@ class PriceController extends GetxController {
     } catch (e) {
       print("Error initializing or playing audio: $e");
     }
+  }
+
+  Future<void> playClippingforLastDeal() async {
+    try {
+      // Load the audio asset and play with looping
+      sourceLastDeal = await soloudLastDeal.loadAsset('audio/claping.mp3');
+      soundHandleLastDeal =
+          await soloudLastDeal.play(sourceLastDeal, looping: true, volume: 1.0);
+    } catch (e) {
+      print("Error initializing or playing audio: $e");
+    }
+  }
+
+  Future<void> stopSoundForLastDeal() async {
+    await soloudLastDeal.stop(soundHandleLastDeal);
+
+    // Deinitialize the audio engine
+    await soloudLastDeal.disposeSource(sourceLastDeal);
+    // await ringPlayer.stop();
   }
 
   Future<void> stopRingSound() async {
@@ -892,8 +914,6 @@ class PriceController extends GetxController {
 
   Future<void> revealPlayerCase() async {
     Map<String, dynamic>? matchedItem;
-    stopRingSound(); // Stop the ringing sound
-
 // First, check in priceListOne
     matchedItem = priceListOne.firstWhere(
       (item) => item['image'] == removedPriceImage2.value,
@@ -916,15 +936,16 @@ class PriceController extends GetxController {
 
       // Compare the value and play the appropriate sound
       if (priceValue > 2988) {
-        await playClappingSound3(); // Play clapping sound for higher values
+        await playClippingforLastDeal(); // Play clapping sound for higher values
       } else {
         // await playDifferentSound(); // Play a different sound for lower values
         // drumRollSound();
-        await playClappingSound3(); // Play clapping sound for higher values
+        await playClippingforLastDeal();
       }
     } else {
       // Handle the case where no match is found in both lists
-      await playClappingSound(); // Play clapping sound for higher values
+      await playClippingforLastDeal();
+// Play clapping sound for higher values
 
       debugPrint('No matching item found for image: $removedPriceImage');
     }
@@ -980,7 +1001,7 @@ class PriceController extends GetxController {
         const Duration(
           seconds: 9,
         ), () {
-      stopRingSound();
+      stopSoundForLastDeal();
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
     });
@@ -991,6 +1012,8 @@ class PriceController extends GetxController {
     getData();
     soloud = SoLoud.instance;
     await soloud.init();
+    soloudLastDeal = SoLoud.instance;
+    await soloudLastDeal.init();
     soloudRing = SoLoud.instance;
     await soloudRing.init();
     super.onInit();
