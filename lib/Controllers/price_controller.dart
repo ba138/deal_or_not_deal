@@ -19,12 +19,6 @@ class PriceController extends GetxController {
   late SoLoud soloud;
   late SoundHandle soundHandle;
   late AudioSource source;
-  late SoLoud soloud2;
-  late SoundHandle soundHandle2;
-  late AudioSource source2;
-  late SoLoud soloud3;
-  late SoundHandle soundHandle3;
-  late AudioSource source3;
   late SoLoud soloudRing;
   late SoundHandle soundHandleRing;
   late AudioSource sourceRing;
@@ -85,19 +79,6 @@ class PriceController extends GetxController {
       // Load the audio asset and play with looping
       source = await soloud.loadAsset('audio/claping.mp3');
       soundHandle = await soloud.play(source, looping: false, volume: 1.0);
-    } catch (e) {
-      print("Error initializing or playing audio: $e");
-    }
-  }
-
-  Future<void> playClappingSound4() async {
-    try {
-      // Initialize the audio engine
-      // soloud = SoLoud.instance;
-
-      // Load the audio asset and play with looping
-      source2 = await soloud2.loadAsset('audio/claping.mp3');
-      soundHandle2 = await soloud2.play(source, looping: false, volume: 1.0);
     } catch (e) {
       print("Error initializing or playing audio: $e");
     }
@@ -167,16 +148,6 @@ class PriceController extends GetxController {
     }
   }
 
-  Future<void> playThinkingSound2() async {
-    try {
-      // Load the audio asset and play with looping
-      source3 = await soloud3.loadAsset('audio/thinking_music.mp3');
-      soundHandle3 = await soloud3.play(source, looping: true, volume: 1.0);
-    } catch (e) {
-      print("Error initializing or playing audio: $e");
-    }
-  }
-
   Future<void> stopRingSound() async {
     await soloud.stop(soundHandle);
 
@@ -185,19 +156,11 @@ class PriceController extends GetxController {
     // await ringPlayer.stop();
   }
 
-  Future<void> stopRingSound3() async {
-    await soloud3.stop(soundHandle);
-
-    // Deinitialize the audio engine
-    await soloud3.disposeSource(source);
-    // await ringPlayer.stop();
-  }
-
   Future<void> stopRingSound2() async {
-    await soloud2.stop(soundHandle2);
+    await soloudRing.stop(soundHandleRing);
 
     // Deinitialize the audio engine
-    await soloud2.disposeSource(source2);
+    await soloud.disposeSource(sourceRing);
     // await ringPlayer.stop();
   }
 
@@ -347,12 +310,12 @@ class PriceController extends GetxController {
         Get.back();
         Completer<void> playCallCompleter = Completer<void>();
 
-        playThinkingSound2();
+        playThinkingSound();
         _showBankerOfferForLastRound(playCallCompleter, true);
-        await phoneCallCompleter.future;
+        await playCallCompleter.future;
         showbuttons.value = true;
         debugPrint("Show buttons enabled: ${showbuttons.value}");
-        stopRingSound3();
+        // stopRingSound();
         playThinkingSound();
         update();
       }
@@ -415,6 +378,8 @@ class PriceController extends GetxController {
   }
 
   void _showConguritaionDialog(int amount) {
+    stopRingSound();
+    stopRingSound2();
     Get.dialog(Dialog(
       child: SizedBox(
         height: 300,
@@ -763,7 +728,6 @@ class PriceController extends GetxController {
                   InkWell(
                     onTap: () async {
                       Get.back(); // Close the dialog
-                      stopRingSound();
                       _showConguritaionDialog(bankerOffer.value);
                     },
                     child: Container(
@@ -796,7 +760,6 @@ class PriceController extends GetxController {
                   const SizedBox(width: 12),
                   InkWell(
                     onTap: () {
-                      playCallCompleter.complete();
                       int emptyCount =
                           priceImagesDynamic.where((item) => item == "").length;
                       debugPrint(
@@ -818,6 +781,9 @@ class PriceController extends GetxController {
                           stopRingSound(); // Stop the ringing sound
                         });
                         Get.back(); // Close the dialog
+
+                        playCallCompleter.complete();
+
                         // nextRound(casesPerRound);
                       }
                     },
@@ -927,7 +893,7 @@ class PriceController extends GetxController {
   Future<void> revealPlayerCase() async {
     Map<String, dynamic>? matchedItem;
     stopRingSound(); // Stop the ringing sound
-    stopRingSound3();
+
 // First, check in priceListOne
     matchedItem = priceListOne.firstWhere(
       (item) => item['image'] == removedPriceImage2.value,
@@ -950,15 +916,15 @@ class PriceController extends GetxController {
 
       // Compare the value and play the appropriate sound
       if (priceValue > 2988) {
-        await playClappingSound4(); // Play clapping sound for higher values
+        await playClappingSound3(); // Play clapping sound for higher values
       } else {
         // await playDifferentSound(); // Play a different sound for lower values
         // drumRollSound();
-        await playClappingSound4(); // Play clapping sound for higher values
+        await playClappingSound3(); // Play clapping sound for higher values
       }
     } else {
       // Handle the case where no match is found in both lists
-      await playClappingSound4(); // Play clapping sound for higher values
+      await playClappingSound(); // Play clapping sound for higher values
 
       debugPrint('No matching item found for image: $removedPriceImage');
     }
@@ -1014,7 +980,7 @@ class PriceController extends GetxController {
         const Duration(
           seconds: 9,
         ), () {
-      stopRingSound2();
+      stopRingSound();
       // Navigate to the FirstPage
       Get.offAll(() => const FirstPage());
     });
@@ -1025,10 +991,6 @@ class PriceController extends GetxController {
     getData();
     soloud = SoLoud.instance;
     await soloud.init();
-    soloud2 = SoLoud.instance;
-    await soloud2.init();
-    soloud3 = SoLoud.instance;
-    await soloud3.init();
     soloudRing = SoLoud.instance;
     await soloudRing.init();
     super.onInit();
