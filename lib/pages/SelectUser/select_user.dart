@@ -135,7 +135,7 @@ class _SelectUserState extends State<SelectUser> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.sizeOf(context).height / 1.35,
+                height: MediaQuery.of(context).size.height / 1.35,
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 7,

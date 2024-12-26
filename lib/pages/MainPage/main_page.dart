@@ -223,8 +223,8 @@ class _MainPageState extends State<MainPage> {
           children: [
             Card(
               child: Container(
-                  height: MediaQuery.sizeOf(context).height,
-                  width: 200,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width / 6,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade700.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -248,7 +248,7 @@ class _MainPageState extends State<MainPage> {
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
                                   height:
-                                      MediaQuery.sizeOf(context).height / 19.8,
+                                      MediaQuery.of(context).size.height / 19.8,
                                   decoration: BoxDecoration(
                                       color: Colors.transparent,
                                       borderRadius: BorderRadius.circular(4)),
@@ -274,15 +274,18 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                 ))
                             : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 7.0,
-                                  horizontal: 8, // Add spacing here
+                                padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).size.height / 100,
+                                  horizontal:
+                                      MediaQuery.of(context).size.width /
+                                          160, // Add spacing here
                                 ),
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
                                   height:
-                                      MediaQuery.sizeOf(context).height / 19.8,
+                                      MediaQuery.of(context).size.height / 19.8,
                                   decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [
@@ -303,10 +306,10 @@ class _MainPageState extends State<MainPage> {
                                       Image.asset(
                                         item['image'],
                                         width:
-                                            MediaQuery.sizeOf(context).width /
+                                            MediaQuery.of(context).size.width /
                                                 38,
                                         height:
-                                            MediaQuery.sizeOf(context).height /
+                                            MediaQuery.of(context).size.height /
                                                 24,
                                         fit: BoxFit.cover,
                                       ),
@@ -334,8 +337,8 @@ class _MainPageState extends State<MainPage> {
                     child: Row(
                       children: [
                         Container(
-                          height: MediaQuery.sizeOf(context).height / 6,
-                          width: MediaQuery.sizeOf(context).height / 1.1,
+                          height: MediaQuery.of(context).size.height / 6,
+                          width: MediaQuery.of(context).size.width / 2.2,
                           decoration: const BoxDecoration(
                             color: Colors.transparent,
                             image: DecorationImage(
@@ -345,7 +348,7 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                         SizedBox(
-                          width: MediaQuery.sizeOf(context).width / 25,
+                          width: MediaQuery.of(context).size.width / 25,
                         ),
                         Obx(
                           () => SizedBox(
@@ -361,8 +364,8 @@ class _MainPageState extends State<MainPage> {
                   const SizedBox(height: 16),
                   Card(
                     child: Container(
-                      height: MediaQuery.sizeOf(context).height * 0.75,
-                      width: MediaQuery.sizeOf(context).width,
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade700.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -377,15 +380,17 @@ class _MainPageState extends State<MainPage> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.sizeOf(context).height / 1.65,
+                              height: MediaQuery.of(context).size.height / 1.65,
                               child: Obx(() {
                                 return GridView.builder(
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                      SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
                                     crossAxisSpacing: 0,
                                     mainAxisSpacing: 8.0,
-                                    childAspectRatio: 2.1,
+                                    childAspectRatio:
+                                        MediaQuery.of(context).size.height /
+                                            340,
                                   ),
                                   itemCount: priceController.caseDynamic.length,
                                   itemBuilder: (context, index) {
@@ -438,8 +443,10 @@ class _MainPageState extends State<MainPage> {
                                         priceController.roundImages[
                                             priceController.roundCount.value],
                                         height:
-                                            MediaQuery.sizeOf(context).height /
+                                            MediaQuery.of(context).size.height /
                                                 12,
+                                        // MediaQuery.sizeOf(context).height /
+                                        //     12,
                                         width: 300,
                                         fit: BoxFit.contain,
                                       )
@@ -560,8 +567,8 @@ class _MainPageState extends State<MainPage> {
             const SizedBox(width: 10),
             Card(
               child: Container(
-                height: MediaQuery.sizeOf(context).height,
-                width: 250,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width / 6,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade700.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
@@ -578,14 +585,17 @@ class _MainPageState extends State<MainPage> {
                       final item = priceController.priceListTwoDynamic[index];
                       return item['image'] == ""
                           ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 7.0,
-                                  horizontal: 8), // Add spacing here
+                              padding: EdgeInsets.symmetric(
+                                vertical:
+                                    MediaQuery.of(context).size.height / 100,
+                                horizontal:
+                                    MediaQuery.of(context).size.width / 160,
+                              ), // Add spacing here
                               child: Container(
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
                                 height:
-                                    MediaQuery.sizeOf(context).height / 19.8,
+                                    MediaQuery.of(context).size.height / 19.8,
                                 decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(4)),
@@ -618,7 +628,7 @@ class _MainPageState extends State<MainPage> {
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
                                 height:
-                                    MediaQuery.sizeOf(context).height / 19.8,
+                                    MediaQuery.of(context).size.height / 19.8,
                                 decoration: BoxDecoration(
                                     gradient: const LinearGradient(
                                       colors: [

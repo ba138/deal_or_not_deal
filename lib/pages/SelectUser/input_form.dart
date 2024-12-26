@@ -131,90 +131,87 @@ class _InputForumState extends State<InputForum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          height: MediaQuery.sizeOf(context).height,
-          width: MediaQuery.sizeOf(context).width,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("images/inputpic.jpg"),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/inputpic.jpg"),
+            fit: BoxFit.cover,
           ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (cases.isNotEmpty) ...[
-                  SizedBox(
-                    height: 400,
-                    width: 400,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextField(
-                            controller: _controller,
-                            decoration: const InputDecoration(
-                              labelText: "Enter Player Name",
-                              border: OutlineInputBorder(),
-                            ),
-                            onSubmitted: (value) {
-                              // Trigger the case assignment when Enter is pressed
-                              if (value.isNotEmpty) {
-                                addPlayer(value);
-                              }
-                            },
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (cases.isNotEmpty) ...[
+                SizedBox(
+                  height: 400,
+                  width: 400,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextField(
+                          controller: _controller,
+                          decoration: const InputDecoration(
+                            labelText: "Enter Player Name",
+                            border: OutlineInputBorder(),
                           ),
-                          const SizedBox(height: 60),
-                          InkWell(
-                            onTap: () {
-                              // Trigger the case assignment on button tap
-                              if (_controller.text.isNotEmpty) {
-                                addPlayer(_controller.text);
-                              }
-                            },
-                            child: Container(
-                              height: 56,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    AppColors.primaryColor,
-                                    AppColors.secondPrimaryColor,
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
+                          onSubmitted: (value) {
+                            // Trigger the case assignment when Enter is pressed
+                            if (value.isNotEmpty) {
+                              addPlayer(value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 60),
+                        InkWell(
+                          onTap: () {
+                            // Trigger the case assignment on button tap
+                            if (_controller.text.isNotEmpty) {
+                              addPlayer(_controller.text);
+                            }
+                          },
+                          child: Container(
+                            height: 56,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [
+                                  AppColors.primaryColor,
+                                  AppColors.secondPrimaryColor,
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
                               ),
-                              child: const Center(
-                                child: Text(
-                                  "Add",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Add",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ] else
-                  const Text(
-                    "All cases have been assigned.",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                const SizedBox(height: 20),
-              ],
-            ),
+                ),
+              ] else
+                const Text(
+                  "All cases have been assigned.",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              const SizedBox(height: 20),
+            ],
           ),
         ),
       ),
