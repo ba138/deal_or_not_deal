@@ -424,6 +424,9 @@ class _MainPageState extends State<MainPage> {
                                 );
                               }),
                             ),
+                            const SizedBox(
+                              height: 8,
+                            ),
                             Obx(
                               () {
                                 return priceController.showbuttons.value != true
@@ -432,8 +435,8 @@ class _MainPageState extends State<MainPage> {
                                             priceController.roundCount.value],
                                         height:
                                             MediaQuery.sizeOf(context).height /
-                                                10,
-                                        width: MediaQuery.sizeOf(context).width,
+                                                12,
+                                        width: 300,
                                         fit: BoxFit.contain,
                                       )
                                     : Row(
@@ -539,9 +542,9 @@ class _MainPageState extends State<MainPage> {
                                       );
                               },
                             ),
-                            // const SizedBox(
-                            //   height: 4,
-                            // )
+                            const SizedBox(
+                              height: 4,
+                            )
                           ],
                         ),
                       ),
