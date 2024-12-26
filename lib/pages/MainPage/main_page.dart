@@ -302,8 +302,12 @@ class _MainPageState extends State<MainPage> {
                                     children: [
                                       Image.asset(
                                         item['image'],
-                                        width: 30,
-                                        height: 30,
+                                        width:
+                                            MediaQuery.sizeOf(context).width /
+                                                38,
+                                        height:
+                                            MediaQuery.sizeOf(context).height /
+                                                24,
                                         fit: BoxFit.cover,
                                       ),
                                       Text(
@@ -331,17 +335,17 @@ class _MainPageState extends State<MainPage> {
                       children: [
                         Container(
                           height: MediaQuery.sizeOf(context).height / 6,
-                          width: MediaQuery.sizeOf(context).height / 1.2,
+                          width: MediaQuery.sizeOf(context).height / 1.1,
                           decoration: const BoxDecoration(
                             color: Colors.transparent,
                             image: DecorationImage(
                               image: AssetImage("images/logo.png"),
-                              fit: BoxFit.contain,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width / 25,
                         ),
                         Obx(
                           () => SizedBox(
