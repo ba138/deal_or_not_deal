@@ -39,12 +39,12 @@ class FirstPage extends StatelessWidget {
         ),
       ),
       body: Container(
-        height: MediaQuery.sizeOf(context).height,
-        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("images/splash_image.jpg"),
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           ),
         ),
       ),

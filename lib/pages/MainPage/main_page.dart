@@ -224,7 +224,7 @@ class _MainPageState extends State<MainPage> {
             Card(
               child: Container(
                   height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width / 6,
+                  width: MediaQuery.of(context).size.width * 0.17,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade700.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
@@ -241,9 +241,12 @@ class _MainPageState extends State<MainPage> {
                         final item = priceController.priceListOneDynamic[index];
                         return item['image'] == ""
                             ? Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 7.0,
-                                    horizontal: 8), // Add spacing here
+                                padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).size.height / 100,
+                                  horizontal:
+                                      MediaQuery.of(context).size.width / 160,
+                                ), // Add spacing here
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
@@ -380,17 +383,21 @@ class _MainPageState extends State<MainPage> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.height / 1.65,
+                              height: MediaQuery.of(context).size.height * 0.60,
                               child: Obx(() {
                                 return GridView.builder(
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
                                     crossAxisSpacing: 0,
-                                    mainAxisSpacing: 8.0,
-                                    childAspectRatio:
-                                        MediaQuery.of(context).size.height /
-                                            340,
+                                    mainAxisSpacing:
+                                        MediaQuery.of(context).size.height / 80,
+                                    childAspectRatio: MediaQuery.of(context)
+                                            .size
+                                            .height /
+                                        (MediaQuery.of(context).size.height *
+                                            0.48),
+                                    //0.6
                                   ),
                                   itemCount: priceController.caseDynamic.length,
                                   itemBuilder: (context, index) {
@@ -401,8 +408,16 @@ class _MainPageState extends State<MainPage> {
                                       onTap: () =>
                                           priceController.onCaseTapped(index),
                                       child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 24.0, right: 24),
+                                        padding: EdgeInsets.only(
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              100,
+                                          right: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              100,
+                                        ),
                                         child: Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -568,7 +583,7 @@ class _MainPageState extends State<MainPage> {
             Card(
               child: Container(
                 height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width / 6,
+                width: MediaQuery.of(context).size.width * 0.17,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade700.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
