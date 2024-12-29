@@ -338,7 +338,7 @@ class PriceController extends GetxController {
         showbuttons.value = true;
         debugPrint("Show buttons enabled: ${showbuttons.value}");
         // stopRingSound();
-        playThinkingSound();
+        // playThinkingSound();
         update();
       }
     }
@@ -782,32 +782,32 @@ class PriceController extends GetxController {
                   const SizedBox(width: 12),
                   InkWell(
                     onTap: () {
-                      int emptyCount =
-                          priceImagesDynamic.where((item) => item == "").length;
-                      debugPrint(
-                          "this is the lenght of caseDynamic:$emptyCount");
-                      if (emptyCount == 24) {
-                        showbuttons.value = true;
-                        debugPrint(
-                            "this is value of showbutton:${showbuttons.value}");
-                        playThinkingSound();
-                        Get.back();
-                        update();
-                      } else {
-                        stopRingSound(); // Stop the ringing sound
-                        playClappingSound();
-                        Future.delayed(
-                            const Duration(
-                              seconds: 4,
-                            ), () {
-                          stopRingSound(); // Stop the ringing sound
-                        });
-                        Get.back(); // Close the dialog
+                      // int emptyCount =
+                      //     priceImagesDynamic.where((item) => item == "").length;
+                      // debugPrint(
+                      //     "this is the lenght of caseDynamic:$emptyCount");
+                      // if (emptyCount == 24) {
+                      //   showbuttons.value = true;
+                      //   debugPrint(
+                      //       "this is value of showbutton:${showbuttons.value}");
+                      //   playThinkingSound();
+                      //   Get.back();
+                      //   update();
+                      // } else {
+                      // stopRingSound(); // Stop the ringing sound
+                      // playClappingSound();
+                      // Future.delayed(
+                      //     const Duration(
+                      //       seconds: 4,
+                      //     ), () {
+                      //   stopRingSound(); // Stop the ringing sound
+                      // });
+                      Get.back(); // Close the dialog
 
-                        playCallCompleter.complete();
+                      playCallCompleter.complete();
 
-                        // nextRound(casesPerRound);
-                      }
+                      //   // nextRound(casesPerRound);
+                      // }
                     },
                     child: Container(
                       height: 56,
