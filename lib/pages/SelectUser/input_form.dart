@@ -135,26 +135,48 @@ class _InputForumState extends State<InputForum> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/inputpic.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
+            gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF0D0D12), // Near black
+            Color(0xFF2A2B40), // Dark purple-gray
+            Color(0xFF1F1F2E), // Deep slate blue
+            Color(0xFF141414), // Pure black
+          ],
+          stops: [0.0, 0.4, 0.8, 1.0],
+        )),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 6,
+                width: MediaQuery.of(context).size.width / 2.2,
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                  image: DecorationImage(
+                    image: AssetImage("images/logo.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 80,
+              ),
               if (cases.isNotEmpty) ...[
-                SizedBox(
-                  height: 400,
-                  width: 400,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.35,
+                          right: MediaQuery.of(context).size.width * 0.35,
+                        ),
+                        child: TextField(
                           controller: _controller,
                           decoration: const InputDecoration(
                             labelText: "Enter Player Name",
@@ -167,42 +189,42 @@ class _InputForumState extends State<InputForum> {
                             }
                           },
                         ),
-                        const SizedBox(height: 60),
-                        InkWell(
-                          onTap: () {
-                            // Trigger the case assignment on button tap
-                            if (_controller.text.isNotEmpty) {
-                              addPlayer(_controller.text);
-                            }
-                          },
-                          child: Container(
-                            height: 56,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  AppColors.primaryColor,
-                                  AppColors.secondPrimaryColor,
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
+                      ),
+                      const SizedBox(height: 60),
+                      InkWell(
+                        onTap: () {
+                          // Trigger the case assignment on button tap
+                          if (_controller.text.isNotEmpty) {
+                            addPlayer(_controller.text);
+                          }
+                        },
+                        child: Container(
+                          height: 56,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                AppColors.primaryColor,
+                                AppColors.secondPrimaryColor,
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
                             ),
-                            child: const Center(
-                              child: Text(
-                                "Add",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Add",
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ] else
