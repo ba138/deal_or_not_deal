@@ -41,6 +41,7 @@ dependencies:
   flutter_soloud: ^2.1.7
   logging: ^1.3.0
   flutter_launcher_icons: ^0.14.2
+  flutter_acrylic: ^1.1.4
   # just_audio: ^0.9.42
 
 dev_dependencies:

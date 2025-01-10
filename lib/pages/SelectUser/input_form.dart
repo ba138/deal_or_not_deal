@@ -135,24 +135,31 @@ class _InputForumState extends State<InputForum> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0D0D12), // Near black
-            Color(0xFF2A2B40), // Dark purple-gray
-            Color(0xFF1F1F2E), // Deep slate blue
-            Color(0xFF141414), // Pure black
-          ],
-          stops: [0.0, 0.4, 0.8, 1.0],
-        )),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0D0D12), // Near black
+              Color(0xFF2A2B40), // Dark purple-gray
+              Color(0xFF1F1F2E), // Deep slate blue
+              Color(0xFF141414), // Pure black
+            ],
+            stops: [0.0, 0.4, 0.8, 1.0],
+          ),
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Image.asset(
+              //   "images/staticlogo.png",
+              //   height: MediaQuery.of(context).size.height / 2,
+              //   width: 350,
+              //   fit: BoxFit.fill,
+              // ),
               Container(
-                height: MediaQuery.of(context).size.height / 6,
+                height: MediaQuery.of(context).size.height / 7,
                 width: MediaQuery.of(context).size.width / 2.2,
                 decoration: const BoxDecoration(
                   color: Colors.transparent,
@@ -163,7 +170,7 @@ class _InputForumState extends State<InputForum> {
                 ),
               ),
               const SizedBox(
-                height: 80,
+                height: 20,
               ),
               if (cases.isNotEmpty) ...[
                 Padding(

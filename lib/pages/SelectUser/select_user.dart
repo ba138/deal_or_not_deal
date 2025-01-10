@@ -125,9 +125,16 @@ class _SelectUserState extends State<SelectUser> {
         height: MediaQuery.sizeOf(context).height,
         width: MediaQuery.sizeOf(context).width,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/splash_image.jpg"),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0D0D12), // Near black
+              Color(0xFF2A2B40), // Dark purple-gray
+              Color(0xFF1F1F2E), // Deep slate blue
+              Color(0xFF141414), // Pure black
+            ],
+            stops: [0.0, 0.4, 0.8, 1.0],
           ),
         ),
         child: Padding(

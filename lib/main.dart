@@ -1,6 +1,8 @@
 import 'package:deal_or_not_deal/pages/FirstPage/first_page.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/window.dart';
+import 'package:flutter_acrylic/window_effect.dart';
 import 'package:get/get.dart';
 
 import 'package:window_manager/window_manager.dart';
@@ -12,7 +14,12 @@ void main() async {
   _setupLogging();
   // Initialize the window_manager
   await windowManager.ensureInitialized();
-
+  await Window.initialize();
+  Window.setEffect(
+    effect: WindowEffect
+        .disabled, // Use `WindowEffect.solid` if you want a solid color
+    color: const Color(0xFF1A1A1A), // Set your desired color (dark gray here)
+  );
   // Set window options
   WindowOptions windowOptions = const WindowOptions(
     size: Size(1400, 700), // Set a fixed size for the window

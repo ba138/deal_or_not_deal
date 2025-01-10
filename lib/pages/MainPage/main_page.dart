@@ -217,16 +217,449 @@ class _MainPageState extends State<MainPage> {
     );
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Card(
-              child: Container(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0D0D12), // Near black
+              Color(0xFF2A2B40), // Dark purple-gray
+              Color(0xFF1F1F2E), // Deep slate blue
+              Color(0xFF141414), // Pure black
+            ],
+            stops: [0.0, 0.4, 0.8, 1.0],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Card(
+                child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width * 0.17,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF0D0D12), // Near black
+                          Color(0xFF2A2B40), // Dark purple-gray
+                          Color(0xFF1F1F2E), // Deep slate blue
+                          Color(0xFF141414), // Pure black
+                        ],
+                        stops: [0.0, 0.4, 0.8, 1.0],
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                      ),
+                    ),
+                    child: Obx(() {
+                      return ListView.builder(
+                        itemCount: priceController.priceListOneDynamic.length,
+                        itemBuilder: (context, index) {
+                          final item =
+                              priceController.priceListOneDynamic[index];
+                          return item['image'] == ""
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height /
+                                            100,
+                                    horizontal:
+                                        MediaQuery.of(context).size.width / 160,
+                                  ), // Add spacing here
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8),
+                                    height: MediaQuery.of(context).size.height /
+                                        19.8,
+                                    decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius: BorderRadius.circular(4)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        // Image.asset(
+                                        //   item['image'],
+                                        //   width: 30,
+                                        //   height: 30,
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                        Text(
+                                          "${item['priceValue']}",
+                                          style: const TextStyle(
+                                            color: Colors.transparent,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              : Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height /
+                                            100,
+                                    horizontal:
+                                        MediaQuery.of(context).size.width /
+                                            160, // Add spacing here
+                                  ),
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8),
+                                    height: MediaQuery.of(context).size.height /
+                                        19.8,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          AppColors.primaryColor,
+                                          AppColors.secondPrimaryColor
+                                        ],
+                                        begin: Alignment
+                                            .centerLeft, // Gradient starts from left
+                                        end: Alignment
+                                            .centerRight, // Gradient ends at right
+                                      ),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.asset(
+                                          item['image'],
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              38,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              24,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Text(
+                                          "${item['priceValue']}",
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                        },
+                      );
+                    })),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height / 6,
+                            width: MediaQuery.of(context).size.width / 2.2,
+                            decoration: const BoxDecoration(
+                              color: Colors.transparent,
+                              image: DecorationImage(
+                                image: AssetImage("images/logo.png"),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 25,
+                          ),
+                          Obx(
+                            () => Image.asset(
+                              priceController.userCaseImage.value,
+                              height: MediaQuery.of(context).size.height / 6,
+                              width: MediaQuery.of(context).size.width / 10,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.75,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFF0D0D12), // Near black
+                              Color(0xFF2A2B40), // Dark purple-gray
+                              Color(0xFF1F1F2E), // Deep slate blue
+                              Color(0xFF141414), // Pure black
+                            ],
+                            stops: [0.0, 0.4, 0.8, 1.0],
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                            strokeAlign: BorderSide.strokeAlignCenter,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.60,
+                                decoration: const BoxDecoration(
+                                  //     gradient: LinearGradient(
+                                  //   begin: Alignment.topCenter,
+                                  //   end: Alignment.bottomCenter,
+                                  //   colors: [
+                                  //     Color(0xFF0D0D12), // Near black
+                                  //     Color(0xFF2A2B40), // Dark purple-gray
+                                  //     Color(0xFF1F1F2E), // Deep slate blue
+                                  //     Color(0xFF141414), // Pure black
+                                  //   ],
+                                  //   stops: [0.0, 0.4, 0.8, 1.0],
+                                  // )
+                                  color: Colors.transparent,
+                                ),
+                                child: Obx(() {
+                                  return GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 5,
+                                      crossAxisSpacing: 0,
+                                      mainAxisSpacing:
+                                          MediaQuery.of(context).size.height /
+                                              80,
+                                      childAspectRatio: MediaQuery.of(context)
+                                              .size
+                                              .height /
+                                          (MediaQuery.of(context).size.height *
+                                              0.48),
+                                      //0.6
+                                    ),
+                                    itemCount:
+                                        priceController.caseDynamic.length,
+                                    itemBuilder: (context, index) {
+                                      String caseImage =
+                                          priceController.caseDynamic[index];
+
+                                      return GestureDetector(
+                                        onTap: () =>
+                                            priceController.onCaseTapped(index),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                100,
+                                            right: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                40,
+                                          ),
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            elevation: 4,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.transparent,
+                                                border: Border.all(
+                                                  color: Colors
+                                                      .white, // Highlight tapped case
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: caseImage.isNotEmpty
+                                                  ? Image.asset(
+                                                      caseImage,
+                                                      fit: BoxFit.contain,
+                                                    )
+                                                  : const SizedBox.shrink(),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Obx(
+                                () {
+                                  return priceController.showbuttons.value !=
+                                          true
+                                      ? Image.asset(
+                                          priceController.roundImages[
+                                              priceController.roundCount.value],
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              12,
+                                          // MediaQuery.sizeOf(context).height /
+                                          //     12,
+                                          width: 300,
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                if (priceController
+                                                        .isSwap.value ==
+                                                    false) {
+                                                  priceController.swapElements(
+                                                      widget.selectedUserData[
+                                                          'caseImage']);
+                                                } else {
+                                                  Get.snackbar(
+                                                      "Swap", "Already Swap");
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 56,
+                                                width: 200,
+                                                decoration: BoxDecoration(
+                                                  gradient: priceController
+                                                              .isSwap.value ==
+                                                          false
+                                                      ? const LinearGradient(
+                                                          colors: [
+                                                            AppColors
+                                                                .primaryColor,
+                                                            AppColors
+                                                                .secondPrimaryColor
+                                                          ],
+                                                          begin: Alignment
+                                                              .centerLeft, // Start from the left
+                                                          end: Alignment
+                                                              .centerRight, // End at the right
+                                                        )
+                                                      : const LinearGradient(
+                                                          colors: [
+                                                            AppColors
+                                                                .primaryColor,
+                                                            AppColors
+                                                                .primaryColor
+                                                          ],
+                                                          begin: Alignment
+                                                              .centerLeft, // Start from the left
+                                                          end: Alignment
+                                                              .centerRight, // End at the right
+                                                        ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Swap",
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 30,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                priceController
+                                                    .revealPlayerCase();
+                                              },
+                                              child: Container(
+                                                height: 56,
+                                                width: 200,
+                                                decoration: BoxDecoration(
+                                                  gradient:
+                                                      const LinearGradient(
+                                                    colors: [
+                                                      AppColors.primaryColor,
+                                                      AppColors
+                                                          .secondPrimaryColor
+                                                    ],
+                                                    begin: Alignment
+                                                        .centerLeft, // Start from the left
+                                                    end: Alignment
+                                                        .centerRight, // End at the right
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Reveal",
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Card(
+                child: Container(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width * 0.17,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade700.withOpacity(0.2),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF0D0D12), // Near black
+                        Color(0xFF2A2B40), // Dark purple-gray
+                        Color(0xFF1F1F2E), // Deep slate blue
+                        Color(0xFF141414), // Pure black
+                      ],
+                      stops: [0.0, 0.4, 0.8, 1.0],
+                    ),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.white,
@@ -236,9 +669,9 @@ class _MainPageState extends State<MainPage> {
                   ),
                   child: Obx(() {
                     return ListView.builder(
-                      itemCount: priceController.priceListOneDynamic.length,
+                      itemCount: priceController.priceListTwoDynamic.length,
                       itemBuilder: (context, index) {
-                        final item = priceController.priceListOneDynamic[index];
+                        final item = priceController.priceListTwoDynamic[index];
                         return item['image'] == ""
                             ? Padding(
                                 padding: EdgeInsets.symmetric(
@@ -277,43 +710,34 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                 ))
                             : Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical:
-                                      MediaQuery.of(context).size.height / 100,
-                                  horizontal:
-                                      MediaQuery.of(context).size.width /
-                                          160, // Add spacing here
-                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 7.0,
+                                    horizontal: 8), // Add spacing here
                                 child: Container(
                                   padding:
                                       const EdgeInsets.only(left: 8, right: 8),
                                   height:
                                       MediaQuery.of(context).size.height / 19.8,
                                   decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.primaryColor,
-                                        AppColors.secondPrimaryColor
-                                      ],
-                                      begin: Alignment
-                                          .centerLeft, // Gradient starts from left
-                                      end: Alignment
-                                          .centerRight, // Gradient ends at right
-                                    ),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          AppColors.primaryColor,
+                                          AppColors.secondPrimaryColor
+                                        ],
+                                        begin: Alignment
+                                            .centerLeft, // Gradient starts from left
+                                        end: Alignment
+                                            .centerRight, // Gradient ends at right
+                                      ),
+                                      borderRadius: BorderRadius.circular(4)),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Image.asset(
                                         item['image'],
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                38,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                24,
+                                        width: 30,
+                                        height: 30,
                                         fit: BoxFit.cover,
                                       ),
                                       Text(
@@ -326,363 +750,14 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
+                                ));
                       },
                     );
-                  })),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height / 6,
-                          width: MediaQuery.of(context).size.width / 2.2,
-                          decoration: const BoxDecoration(
-                            color: Colors.transparent,
-                            image: DecorationImage(
-                              image: AssetImage("images/logo.png"),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 25,
-                        ),
-                        Obx(
-                          () => SizedBox(
-                            child: Image.asset(
-                              priceController.userCaseImage.value,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.75,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade700.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.60,
-                              child: Obx(() {
-                                return GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 5,
-                                    crossAxisSpacing: 0,
-                                    mainAxisSpacing:
-                                        MediaQuery.of(context).size.height / 80,
-                                    childAspectRatio: MediaQuery.of(context)
-                                            .size
-                                            .height /
-                                        (MediaQuery.of(context).size.height *
-                                            0.48),
-                                    //0.6
-                                  ),
-                                  itemCount: priceController.caseDynamic.length,
-                                  itemBuilder: (context, index) {
-                                    String caseImage =
-                                        priceController.caseDynamic[index];
-
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          priceController.onCaseTapped(index),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              100,
-                                          right: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              100,
-                                        ),
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          elevation: 4,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors
-                                                    .white, // Highlight tapped case
-                                                width: 2,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: caseImage.isNotEmpty
-                                                ? Image.asset(
-                                                    caseImage,
-                                                    fit: BoxFit.contain,
-                                                  )
-                                                : const SizedBox.shrink(),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Obx(
-                              () {
-                                return priceController.showbuttons.value != true
-                                    ? Image.asset(
-                                        priceController.roundImages[
-                                            priceController.roundCount.value],
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                12,
-                                        // MediaQuery.sizeOf(context).height /
-                                        //     12,
-                                        width: 300,
-                                        fit: BoxFit.contain,
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              if (priceController
-                                                      .isSwap.value ==
-                                                  false) {
-                                                priceController.swapElements(
-                                                    widget.selectedUserData[
-                                                        'caseImage']);
-                                              } else {
-                                                Get.snackbar(
-                                                    "Swap", "Already Swap");
-                                              }
-                                            },
-                                            child: Container(
-                                              height: 56,
-                                              width: 200,
-                                              decoration: BoxDecoration(
-                                                gradient: priceController
-                                                            .isSwap.value ==
-                                                        false
-                                                    ? const LinearGradient(
-                                                        colors: [
-                                                          AppColors
-                                                              .primaryColor,
-                                                          AppColors
-                                                              .secondPrimaryColor
-                                                        ],
-                                                        begin: Alignment
-                                                            .centerLeft, // Start from the left
-                                                        end: Alignment
-                                                            .centerRight, // End at the right
-                                                      )
-                                                    : const LinearGradient(
-                                                        colors: [
-                                                          AppColors
-                                                              .primaryColor,
-                                                          AppColors.primaryColor
-                                                        ],
-                                                        begin: Alignment
-                                                            .centerLeft, // Start from the left
-                                                        end: Alignment
-                                                            .centerRight, // End at the right
-                                                      ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  "Swap",
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 30,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              priceController
-                                                  .revealPlayerCase();
-                                            },
-                                            child: Container(
-                                              height: 56,
-                                              width: 200,
-                                              decoration: BoxDecoration(
-                                                gradient: const LinearGradient(
-                                                  colors: [
-                                                    AppColors.primaryColor,
-                                                    AppColors.secondPrimaryColor
-                                                  ],
-                                                  begin: Alignment
-                                                      .centerLeft, // Start from the left
-                                                  end: Alignment
-                                                      .centerRight, // End at the right
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              child: const Center(
-                                                child: Text(
-                                                  "Reveal",
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                              },
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 10),
-            Card(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width * 0.17,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade700.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                    strokeAlign: BorderSide.strokeAlignCenter,
-                  ),
+                  }),
                 ),
-                child: Obx(() {
-                  return ListView.builder(
-                    itemCount: priceController.priceListTwoDynamic.length,
-                    itemBuilder: (context, index) {
-                      final item = priceController.priceListTwoDynamic[index];
-                      return item['image'] == ""
-                          ? Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).size.height / 100,
-                                horizontal:
-                                    MediaQuery.of(context).size.width / 160,
-                              ), // Add spacing here
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(left: 8, right: 8),
-                                height:
-                                    MediaQuery.of(context).size.height / 19.8,
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Image.asset(
-                                    //   item['image'],
-                                    //   width: 30,
-                                    //   height: 30,
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    Text(
-                                      "${item['priceValue']}",
-                                      style: const TextStyle(
-                                        color: Colors.transparent,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ))
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 7.0,
-                                  horizontal: 8), // Add spacing here
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(left: 8, right: 8),
-                                height:
-                                    MediaQuery.of(context).size.height / 19.8,
-                                decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.primaryColor,
-                                        AppColors.secondPrimaryColor
-                                      ],
-                                      begin: Alignment
-                                          .centerLeft, // Gradient starts from left
-                                      end: Alignment
-                                          .centerRight, // Gradient ends at right
-                                    ),
-                                    borderRadius: BorderRadius.circular(4)),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Image.asset(
-                                      item['image'],
-                                      width: 30,
-                                      height: 30,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Text(
-                                      "${item['priceValue']}",
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ));
-                    },
-                  );
-                }),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
